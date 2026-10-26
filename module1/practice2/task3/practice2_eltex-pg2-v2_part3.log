@@ -1,0 +1,154 @@
+Script started on 2026-10-26 15:01:42+00:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="77" LINES="46"]
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# [7mapt update[27mapt update
+[?2004l[33m0% [Working][0m            Hit:1 http://ru.archive.ubuntu.com/ubuntu noble InRelease
+[33m0% [Working][0m[33m0% [Waiting for headers][0m                        Get:2 http://ru.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+[33m0% [2 InRelease 4,504 B/126 kB 4%][0m[33m                                  0% [Working][0m[33m0% [Waiting for headers][0m                        Get:3 http://ru.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+[33m0% [3 InRelease 4,039 B/126 kB 3%][0m[33m                                  0% [Working][0m[33m0% [Working][0m[33m0% [Working][0m[33m0% [Connecting to security.ubuntu.com][0m[33m0% [Connecting to security.ubuntu.com (185.125.190.81)][0m[33m                                                       0% [Waiting for headers][0m[33m0% [Waiting for headers][0m                        Hit:4 http://security.ubuntu.com/ubuntu noble-security InRelease
+[33m                        0% [Working][0m[33m100% [Working][0m              Fetched 252 kB in 3s (76.2 kB/s)
+Reading package lists... 0%Reading package lists... 0%Reading package lists... 0%Reading package lists... 3%Reading package lists... 3%Reading package lists... 5%Reading package lists... 5%Reading package lists... 5%Reading package lists... 5%Reading package lists... 5%Reading package lists... 5%Reading package lists... 41%Reading package lists... 41%Reading package lists... 57%Reading package lists... 57%Reading package lists... 57%Reading package lists... 57%Reading package lists... 58%Reading package lists... 58%Reading package lists... 61%Reading package lists... 61%Reading package lists... 64%Reading package lists... 64%Reading package lists... 69%Reading package lists... 69%Reading package lists... 73%Reading package lists... 73%Reading package lists... 78%Reading package lists... 78%Reading package lists... 80%Reading package lists... 80%Reading package lists... 80%Reading package lists... 80%Reading package lists... 80%Reading package lists... 80%Reading package lists... 80%Reading package lists... 80%Reading package lists... 80%Reading package lists... 80%Reading package lists... 80%Reading package lists... 80%Reading package lists... 80%Reading package lists... 80%Reading package lists... 80%Reading package lists... 80%Reading package lists... 80%Reading package lists... 80%Reading package lists... 83%Reading package lists... 83%Reading package lists... 85%Reading package lists... 85%Reading package lists... 90%Reading package lists... 90%Reading package lists... 94%Reading package lists... 94%Reading package lists... 98%Reading package lists... 98%Reading package lists... 99%Reading package lists... 99%Reading package lists... 99%Reading package lists... 99%Reading package lists... 99%Reading package lists... 99%Reading package lists... Done
+Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%Building dependency tree... Done
+Reading state information... 0% Reading state information... 0%Reading state information... Done
+94 packages can be upgraded. Run 'apt list --upgradable' to see them.
+[33mN: [0mMissing Signed-By in the sources.list(5) entry for 'http://ru.archive.ubuntu.com/ubuntu'[0m
+[33mN: [0mMissing Signed-By in the sources.list(5) entry for 'http://ru.archive.ubuntu.com/ubuntu'[0m
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# [7mapt install git gh[27mapt install git gh
+[?2004lReading package lists... 0%Reading package lists... 100%Reading package lists... Done
+Building dependency tree... 0%BuildScript started on 2026-10-26 16:08:56+00:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="77" LINES="46"]
+[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# [7mgit --version[27mgit --version
+[?2004lgit version 2.43.0
+[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# [7mgh --version[27mgh --version
+[?2004lgh version 2.45.0 (2025-07-18 Ubuntu 2.45.0-1ubuntu0.3)
+https://github.com/cli/cli/releases/tag/v2.45.0
+[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# [7mgit config --global --[27m[7ml[27m[7mist[27m[A]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# git config --global --list
+[?2004l[?1h=user.name=penakelex[m
+user.email=alexeykoninsky129@gmail.com[m
+init.defaultbranch=main[m
+credential.https://github.com.helper=[m
+credential.https://github.com.helper=!/usr/bin/gh auth git-credential[m
+credential.https://gist.github.com.helper=[m
+credential.https://gist.github.com.helper=!/usr/bin/gh auth git-credential[m
+[K[?1l>[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# [7mls -l ~/.ssh/penakelex[27m[7m*[27m[A]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# ls -l ~/.ssh/penakelex*
+[?2004l-rw------- 1 root root 419 Oct 26 15:24 /root/.ssh/penakelex
+-rw-r--r-- 1 root root 109 Oct 26 15:24 /root/.ssh/penakelex.pub
+[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# [7mgh auth status[27mgh auth status
+[?2004l[0;1;39mgithub.com[0m
+  [0;32m✓[0m Logged in to github.com account [0;1;39mpenakelex[0m (/root/.config/gh/hosts.yml)
+  - Active account: [0;1;39mtrue[0m
+  - Git operations protocol: [0;1;39mssh[0m
+  - Token: [0;1;39mgho_************************************[0m
+  - Token scopes: [0;1;39m'admin:public_key', 'gist', 'read:org', 'repo'[0m
+[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# [7mls -ld ~/eltex-module1[27m[7m-[27m[7mpractice2[27m[A]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# ls -ld ~/eltex-module1-practice2
+[?2004ldrwxr-xr-x 4 root root 4096 Oct 26 15:58 [0m[01;34m/root/eltex-module1-practice2[0m
+[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# 
+[?2004l[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# 
+[?2004l[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# [7mcd ~/eltex-module1-pra[27m[7mc[27m[7mtice2[27m[A]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# cd ~/eltex-module1-practice2
+[?2004l[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# [7mls -l module1/task*[27mls -l module1/task*
+[?2004lmodule1/task1:
+total 4
+-rw-r--r-- 1 root root 132 Oct 26 16:25 report_part1.txt
+
+module1/task2:
+total 4
+-rw-r--r-- 1 root root 788 Oct 26 16:25 eltex-pg2-v2_part.log
+
+module1/task3:
+total 8
+-rw-r--r-- 1 root root 1129 Oct 26 16:25 eltex-pg2-v2_part3_gt20M.log
+-rw-r--r-- 1 root root  305 Oct 26 16:25 eltex-pg2-v2_part3.log
+[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# [7mgit add .[27mgit add .
+[?2004l[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# [7mgit status[27mgit status
+[?2004lOn branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	[32mnew file:   module1/task1/report_part1.txt[m
+	[32mnew file:   module1/task2/eltex-pg2-v2_part.log[m
+	[32mnew file:   module1/task3/eltex-pg2-v2_part3.log[m
+	[32mnew file:   module1/task3/eltex-pg2-v2_part3_gt20M.log[m
+
+[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# [7mgit commit -m "Added r[27m[7me[27m[7mports for module 1"[27m[A]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# git commit -m "Added reports for module 1"
+[?2004l[main 23a7464] Added reports for module 1
+ 4 files changed, 104 insertions(+)
+ create mode 100644 module1/task1/report_part1.txt
+ create mode 100644 module1/task2/eltex-pg2-v2_part.log
+ create mode 100644 module1/task3/eltex-pg2-v2_part3.log
+ create mode 100644 module1/task3/eltex-pg2-v2_part3_gt20M.log
+[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# [7mgit push[27mgit push
+[?2004lEnumerating objects: 11, done.
+Counting objects:   9% (1/11)Counting objects:  18% (2/11)Counting objects:  27% (3/11)Counting objects:  36% (4/11)Counting objects:  45% (5/11)Counting objects:  54% (6/11)Counting objects:  63% (7/11)Counting objects:  72% (8/11)Counting objects:  81% (9/11)Counting objects:  90% (10/11)Counting objects: 100% (11/11)Counting objects: 100% (11/11), done.
+Delta compression using up to 2 threads
+Compressing objects:  12% (1/8)Compressing objects:  25% (2/8)Compressing objects:  37% (3/8)Compressing objects:  50% (4/8)Compressing objects:  62% (5/8)Compressing objects:  75% (6/8)Compressing objects:  87% (7/8)Compressing objects: 100% (8/8)Compressing objects: 100% (8/8), done.
+Writing objects:  10% (1/10)Writing objects:  20% (2/10)Writing objects:  30% (3/10)Writing objects:  40% (4/10)Writing objects:  50% (5/10)Writing objects:  60% (6/10)Writing objects:  70% (7/10)Writing objects:  80% (8/10)Writing objects:  90% (9/10)Writing objects: 100% (10/10)Writing objects: 100% (10/10), 1.61 KiB | 1.61 MiB/s, done.
+Total 10 (delta 0), reused 0 (delta 0), pack-reused 0
+To https://github.com/penakelex/eltex-module1-practice2.git
+   d7252dc..23a7464  main -> main
+[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# [7mcd ~[27mcd ~
+[?2004l[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# [7mmkdir -p eltex-module1-practice2_clone[27m[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cmkdir -p eltex-module1-practice2_clone
+[?2004l[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# [7mcd eltex-module1-practice2_clone[27mcd eltex-module1-practice2_clone
+[?2004l[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2_cloneroot@eltex-practice2-pg2-v2:~/eltex-module1-practice2_clone# [7mgit clone https:[27m[7m/[27m[7m/github.com/penakelex/eltex-module1-practice2.git .[27m[A]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2_cloneroot@eltex-practice2-pg2-v2:~/eltex-module1-practice2_clone# git clone https://github.com/penakelex/eltex-module1-practice2.git .
+[?2004lCloning into '.'...
+remote: Enumerating objects: 13, done.[K
+remote: Counting objects:   7% (1/13)[Kremote: Counting objects:  15% (2/13)[Kremote: Counting objects:  23% (3/13)[Kremote: Counting objects:  30% (4/13)[Kremote: Counting objects:  38% (5/13)[Kremote: Counting objects:  46% (6/13)[Kremote: Counting objects:  53% (7/13)[Kremote: Counting objects:  61% (8/13)[Kremote: Counting objects:  69% (9/13)[Kremote: Counting objects:  76% (10/13)[Kremote: Counting objects:  84% (11/13)[Kremote: Counting objects:  92% (12/13)[Kremote: Counting objects: 100% (13/13)[Kremote: Counting objects: 100% (13/13), done.[K
+remote: Compressing objects:  11% (1/9)[Kremote: Compressing objects:  22% (2/9)[Kremote: Compressing objects:  33% (3/9)[Kremote: Compressing objects:  44% (4/9)[Kremote: Compressing objects:  55% (5/9)[Kremote: Compressing objects:  66% (6/9)[Kremote: Compressing objects:  77% (7/9)[Kremote: Compressing objects:  88% (8/9)[Kremote: Compressing objects: 100% (9/9)[Kremote: Compressing objects: 100% (9/9), done.[K
+remote: Total 13 (delta 0), reused 13 (delta 0), pack-reused 0 (from 0)[K
+Receiving objects:   7% (1/13)Receiving objects:  15% (2/13)Receiving objects:  23% (3/13)Receiving objects:  30% (4/13)Receiving objects:  38% (5/13)Receiving objects:  46% (6/13)Receiving objects:  53% (7/13)Receiving objects:  61% (8/13)Receiving objects:  69% (9/13)Receiving objects:  76% (10/13)Receiving objects:  84% (11/13)Receiving objects:  92% (12/13)Receiving objects: 100% (13/13)Receiving objects: 100% (13/13), done.
+[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2_cloneroot@eltex-practice2-pg2-v2:~/eltex-module1-practice2_clone# [7mcd ~/eltex-modul[27m[7me[27m[7m1-practice2[27m[A]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2_cloneroot@eltex-practice2-pg2-v2:~/eltex-module1-practice2_clone# cd ~/eltex-module1-practice2
+[?2004l[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# [7mecho "Это изменение вн[27m[7mе[27m[7mсено из основного каталога" >> README.md[27m[A]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# echo "Это изменение внесено из основного каталога" >> README.md
+[?2004l[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# [7mgit add README.md[27mgit add README.md
+[?2004l[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# [7mgit commit -m "Update [27m[7mR[27m[7mEADME from main directory"[27m[A]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# git commit -m "Update README from main directory"
+[?2004l[main e876b16] Update README from main directory
+ 1 file changed, 1 insertion(+)
+[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# [7mgit push[27mgit push
+[?2004lEnumerating objects: 5, done.
+Counting objects:  20% (1/5)Counting objects:  40% (2/5)Counting objects:  60% (3/5)Counting objects:  80% (4/5)Counting objects: 100% (5/5)Counting objects: 100% (5/5), done.
+Delta compression using up to 2 threads
+Compressing objects:  33% (1/3)Compressing objects:  66% (2/3)Compressing objects: 100% (3/3)Compressing objects: 100% (3/3), done.
+Writing objects:  33% (1/3)Writing objects:  66% (2/3)Writing objects: 100% (3/3)Writing objects: 100% (3/3), 392 bytes | 392.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+To https://github.com/penakelex/eltex-module1-practice2.git
+   23a7464..e876b16  main -> main
+[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# [7mcd ~/eltex-module1-pra[27m[7mc[27m[7mtice2_clone[27m[A]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2root@eltex-practice2-pg2-v2:~/eltex-module1-practice2# cd ~/eltex-module1-practice2_clone
+[?2004l[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2_cloneroot@eltex-practice2-pg2-v2:~/eltex-module1-practice2_clone# [7mgit fetch[27mgit fetch
+[?2004lremote: Enumerating objects: 5, done.[K
+remote: Counting objects:  20% (1/5)[Kremote: Counting objects:  40% (2/5)[Kremote: Counting objects:  60% (3/5)[Kremote: Counting objects:  80% (4/5)[Kremote: Counting objects: 100% (5/5)[Kremote: Counting objects: 100% (5/5), done.[K
+remote: Compressing objects:  33% (1/3)[Kremote: Compressing objects:  66% (2/3)[Kremote: Compressing objects: 100% (3/3)[Kremote: Compressing objects: 100% (3/3), done.[K
+remote: Total 3 (delta 0), reused 3 (delta 0), pack-reused 0 (from 0)[K
+Unpacking objects:  33% (1/3)Unpacking objects:  66% (2/3)Unpacking objects: 100% (3/3)Unpacking objects: 100% (3/3), 372 bytes | 372.00 KiB/s, done.
+From https://github.com/penakelex/eltex-module1-practice2
+   23a7464..e876b16  main       -> origin/main
+[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2_cloneroot@eltex-practice2-pg2-v2:~/eltex-module1-practice2_clone# [7mgit log origin/m[27m[7ma[27m[7min[27m[A]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2_cloneroot@eltex-practice2-pg2-v2:~/eltex-module1-practice2_clone# git log origin/main
+[?2004l[?1h=[33mcommit e876b1657fd84bac380a4f24b03cdfcff5c787e4[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m[m
+Author: penakelex <alexeykoninsky129@gmail.com>[m
+Date:   Mon Oct 26 16:30:18 2026 +0000[m
+[m
+    Update README from main directory[m
+[m
+[33mcommit 23a7464569dd1d8e93cffa3aa5158e31ff30a3e4[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m[m
+Author: penakelex <alexeykoninsky129@gmail.com>[m
+Date:   Mon Oct 26 16:26:19 2026 +0000[m
+[m
+    Added reports for module 1[m
+[m
+[33mcommit d7252dcc74741578f98e36b1bcf1348c600d1b4c[m[m
+Author: penakelex <alexeykoninsky129@gmail.com>[m
+Date:   Mon Oct 26 15:58:18 2026 +0000[m
+[m
+    first commit[m
+[K[?1l>[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2_cloneroot@eltex-practice2-pg2-v2:~/eltex-module1-practice2_clone# [7mgit diff main or[27m[7mi[27m[7mgin/main[27m[A]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2_cloneroot@eltex-practice2-pg2-v2:~/eltex-module1-practice2_clone# git diff main origin/main
+[?2004l[?1h=[1mdiff --git a/README.md b/README.md[m[m
+[1mindex 7d2cfdb..93c7247 100644[m[m
+[1m--- a/README.md[m[m
+[1m+++ b/README.md[m[m
+[36m@@ -1 +1,2 @@[m[m
+ # eltex-module1-practice2[m[m
+[32m+[m[32mЭто изменение внесено из основного каталога[m[m
+[K[?1l>[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2_cloneroot@eltex-practice2-pg2-v2:~/eltex-module1-practice2_clone# [7mgit merge origin[27m[7m/[27m[7mmain[27m[A]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2_cloneroot@eltex-practice2-pg2-v2:~/eltex-module1-practice2_clone# git merge origin/main
+[?2004lUpdating 23a7464..e876b16
+Fast-forward
+ README.md | 1 [32m+[m
+ 1 file changed, 1 insertion(+)
+[?2004h]0;root@eltex-practice2-pg2-v2: ~/eltex-module1-practice2_cloneroot@eltex-practice2-pg2-v2:~/eltex-module1-practice2_clone# exit
+[?2004lexit
+
+Script done on 2026-10-26 16:40:24+00:00 [COMMAND_EXIT_CODE="0"]

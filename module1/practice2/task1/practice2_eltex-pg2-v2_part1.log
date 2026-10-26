@@ -1,0 +1,334 @@
+Script started on 2026-10-25 16:21:05+00:00 [TERM="xterm-256color" TTY="/dev/pts/1" COLUMNS="77" LINES="46"]
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# [7mid user1; id user2; id user3[27m
+[7mgetent passwd user1 user2 user3[27m
+[7mls -ld /home/user1 /home/user2 /home/user3[27m
+[7mgroups user1 user2 user3[27m
+[7mgetent group sharegrp[27m
+[7mls -ld /opt/share[27m
+[7mstat -c '%A %U:%G %n' /opt/share[27m[A[A[A[A[A[Aid user1; id user2; id user3
+getent passwd user1 user2 user3
+ls -ld /home/user1 /home/user2 /home/user3
+groups user1 user2 user3
+getent group sharegrp
+ls -ld /opt/share
+stat -c '%A %U:%G %n' /opt/share
+[?2004luid=1001(user1) gid=1001(user1) groups=1001(user1),1004(sharegrp)
+uid=1002(user2) gid=1002(user2) groups=1002(user2),100(users),1004(sharegrp)
+uid=1003(user3) gid=1003(user3) groups=1003(user3),100(users),1004(sharegrp)
+user1:x:1001:1001::/home/user1:/bin/bash
+user2:x:1002:1002:,,,:/home/user2:/bin/bash
+user3:x:1003:1003:,,,:/home/user3:/usr/sbin/nologin
+drwxr-x--- 2 user1 user1 4096 Oct 25 15:26 [0m[01;34m/home/user1[0m
+drwxr-x--- 2 user2 user2 4096 Oct 25 15:33 [01;34m/home/user2[0m
+drwxr-x--- 2 user3 user3 4096 Oct 25 16:08 [01;34m/home/user3[0m
+user1 : user1 sharegrp
+user2 : user2 users sharegrp
+user3 : user3 users sharegrp
+sharegrp:x:1004:user1,user2,user3
+drwxrws--- 2 root sharegrp 4096 Oct 25 16:15 [0m[01;34m/opt/share[0m
+drwxrws--- root:sharegrp /opt/share
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# grp [K[Kep -n 'unmask' /home/user1/.bashrc
+[?2004l[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# su - user [K1
+[?2004l[?2004h]0;user1@eltex-practice2-pg2-v2: ~[01;32muser1@eltex-practice2-pg2-v2[00m:[01;34m~[00m$ unmask
+[?2004lCommand 'unmask' not found, did you mean:
+  command 'unmass' from deb unmass (0.9-7)
+Try: apt install <deb name>
+[?2004h]0;user1@eltex-practice2-pg2-v2: ~[01;32muser1@eltex-practice2-pg2-v2[00m:[01;34m~[00m$ to[K[Kumask
+[?2004l0002
+[?2004h]0;user1@eltex-practice2-pg2-v2: ~[01;32muser1@eltex-practice2-pg2-v2[00m:[01;34m~[00m$ toucj [K[Kh /home/user1/test-[K_umask
+[?2004l[?2004h]0;user1@eltex-practice2-pg2-v2: ~[01;32muser1@eltex-practice2-pg2-v2[00m:[01;34m~[00m$ touch /home/user1/test_umask[Kls -l /home/user1/task[K[K[Kesk[Kt_umask
+[?2004l-rw-rw-r-- 1 user1 user1 0 Oct 25 16:34 /home/user1/test_umask
+[?2004h]0;user1@eltex-practice2-pg2-v2: ~[01;32muser1@eltex-practice2-pg2-v2[00m:[01;34m~[00m$ exit
+[?2004llogout
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# gre p[K[Kp -n 'unmask' /hoe[Kme/user1/.bashrc
+[?2004l[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# echo 'um[Knmaskgrep -n 'unmask' /home/user1/.bashrc[1P
+[?2004l[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# grep -n 'umask' /home/user1/.bashrc[1@n[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1P[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Kecho 'umask 027' >> /home/user/.h[Kbashrc
+[?2004lbash: /home/user/.bashrc: No such file or directory
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# rm -f /home/user1/test_umsak[K[K[Kask
+[?2004l[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# grep-[K - [Kn /[K'umask' /home/user1/.bashrc
+[?2004l[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# echo 'unmask'[K 027' >> /home/user1/.bashrc
+[?2004l[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# greo[Kp -n 'umask' /home/user1/.bashrc
+[?2004l[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# sed -i /[K'/unmask 027/dl [K[K; /y[Kumask 027/d; [K[K; [K[K' /hoe[Kme [K/use r1/.bax[Kshrc;[K
+[?2004l[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# echo 'umask 027' >> /home [K/user1/.bashrc;[K
+[?2004l[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# grep -n 'umask' /home/user/[K1/.bashrc
+[?2004l[32m[K118[m[K[36m[K:[m[K[01;31m[Kumask[m[K 027
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# su - us[Kser1
+[?2004l[?2004h]0;user1@eltex-practice2-pg2-v2: ~[01;32muser1@eltex-practice2-pg2-v2[00m:[01;34m~[00m$ umask
+[?2004l0027
+[?2004h]0;user1@eltex-practice2-pg2-v2: ~[01;32muser1@eltex-practice2-pg2-v2[00m:[01;34m~[00m$ toucj [K[Kh /home/user1/test-[K_ums[Kask
+[?2004l[?2004h]0;user1@eltex-practice2-pg2-v2: ~[01;32muser1@eltex-practice2-pg2-v2[00m:[01;34m~[00m$ ls-[K -l /j[Khome/user1/te[Ks[Kest-[K_umsak[K[K[Kask
+[?2004l-rw-r----- 1 user1 user1 0 Oct 25 17:04 /home/user1/test_umask
+[?2004h]0;user1@eltex-practice2-pg2-v2: ~[01;32muser1@eltex-practice2-pg2-v2[00m:[01;34m~[00m$ exit
+[?2004llogout
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# пк[K[Kgrep -n 'ums[Kasak[K[K[Kas[K[Ksk' /home [K/user/[K1/.bashrc
+[?2004l[32m[K118[m[K[36m[K:[m[K[01;31m[Kumask[m[K 027
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# su -user1
+[?2004lTry 'su --help' for more information.
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# usu -user1grep -n 'umask' /home/user1/.bashrc
+[?2004l[32m[K118[m[K[36m[K:[m[K[01;31m[Kumask[m[K 027
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# grep -n 'umask' /home/user1/.bashrc[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csu -user1[K user1
+[?2004l[?2004h]0;user1@eltex-practice2-pg2-v2: ~[01;32muser1@eltex-practice2-pg2-v2[00m:[01;34m~[00m$ umask
+[?2004l0027
+[?2004h]0;user1@eltex-practice2-pg2-v2: ~[01;32muser1@eltex-practice2-pg2-v2[00m:[01;34m~[00m$ toucj[Kh /home/user1/test-[K_umask_clen[Kan
+[?2004l[?2004h]0;user1@eltex-practice2-pg2-v2: ~[01;32muser1@eltex-practice2-pg2-v2[00m:[01;34m~[00m$ ls -l /hoe[Kme/user1/test-[K_umask_clea[K[K[K[K[K1touch /home/user1/test_umask_clean[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cumask[Ktouch /home/user1/test_umask_clean[K[K[K[K[K[K
+[?2004l[?2004h]0;user1@eltex-practice2-pg2-v2: ~[01;32muser1@eltex-practice2-pg2-v2[00m:[01;34m~[00m$ touch /home/user1/test_umask_clean[K[1P[1P[1P[1P[1P /home/user1/test_umaskl /home/user1/test_umasks /home/user1/test_umask[C /home/user1/test_umask- /home/user1/test_umaskl /home/user1/test_umask
+[?2004l-rw-r----- 1 user1 user1 0 Oct 25 17:12 /home/user1/test_umask
+[?2004h]0;user1@eltex-practice2-pg2-v2: ~[01;32muser1@eltex-practice2-pg2-v2[00m:[01;34m~[00m$ exit
+[?2004llogout
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# ыг =[K[K[K[Ksu - user1
+[?2004l[?2004h]0;user1@eltex-practice2-pg2-v2: ~[01;32muser1@eltex-practice2-pg2-v2[00m:[01;34m~[00m$ cd /opt/ch[K[Kshare && pws[Kd && toucj[Kh file_user1.txt  && ls -s[Kl
+[?2004l/opt/share
+total 0
+-rw-r----- 1 user1 sharegrp 0 Oct 25 17:23 file_user1.txt
+[?2004h]0;user1@eltex-practice2-pg2-v2: /opt/share[01;32muser1@eltex-practice2-pg2-v2[00m:[01;34m/opt/share[00m$ exit
+[?2004llogout
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# su - user2
+[?2004l[?2004h]0;user2@eltex-practice2-pg2-v2: ~[01;32muser2@eltex-practice2-pg2-v2[00m:[01;34m~[00m$ cd /opt/share && touch file_user2.txt && ls - l
+[?2004ltotal 0
+-rw-r----- 1 user1 sharegrp 0 Oct 25 17:23 file_user1.txt
+-rw-rw-r-- 1 user2 sharegrp 0 Oct 25 17:24 file_user2.txt
+[?2004h]0;user2@eltex-practice2-pg2-v2: /opt/share[01;32muser2@eltex-practice2-pg2-v2[00m:[01;34m/opt/share[00m$ us[K[Kexit
+[?2004llogout
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# su -s /bin/bash[Ksh[K[Kh user2[K3
+[?2004l[?2004h]0;user3@eltex-practice2-pg2-v2: /root[01;32muser3@eltex-practice2-pg2-v2[00m:[01;34m/root[00m$ cd /i[Kopt/share && touch file_user3/[K.txt &&  ls -l
+[?2004ltotal 0
+-rw-r----- 1 user1 sharegrp 0 Oct 25 17:23 file_user1.txt
+-rw-rw-r-- 1 user2 sharegrp 0 Oct 25 17:24 file_user2.txt
+-rw-rw-r-- 1 user3 sharegrp 0 Oct 25 17:24 file_user3.txt
+[?2004h]0;user3@eltex-practice2-pg2-v2: /opt/share[01;32muser3@eltex-practice2-pg2-v2[00m:[01;34m/opt/share[00m$ exit
+[?2004lexit
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# su - user1
+[?2004l[?2004h]0;user1@eltex-practice2-pg2-v2: ~[01;32muser1@eltex-practice2-pg2-v2[00m:[01;34m~[00m$ cd /opt/share
+[?2004l[?2004h]0;user1@eltex-practice2-pg2-v2: /opt/share[01;32muser1@eltex-practice2-pg2-v2[00m:[01;34m/opt/share[00m$ rm -f file_user2.txt
+[?2004l[?2004h]0;user1@eltex-practice2-pg2-v2: /opt/share[01;32muser1@eltex-practice2-pg2-v2[00m:[01;34m/opt/share[00m$ f[Krm -f file_user3.txt
+[?2004l[?2004h]0;user1@eltex-practice2-pg2-v2: /opt/share[01;32muser1@eltex-practice2-pg2-v2[00m:[01;34m/opt/share[00m$ ls -ls[K
+[?2004ltotal 0
+-rw-r----- 1 user1 sharegrp 0 Oct 25 17:23 file_user1.txt
+[?2004h]0;user1@eltex-practice2-pg2-v2: /opt/share[01;32muser1@eltex-practice2-pg2-v2[00m:[01;34m/opt/share[00m$ exit
+[?2004llogout
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# su - user2
+[?2004l[?2004h]0;user2@eltex-practice2-pg2-v2: ~[01;32muser2@eltex-practice2-pg2-v2[00m:[01;34m~[00m$ cd /opt/share && touch file_user2.txt
+[?2004l[?2004h]0;user2@eltex-practice2-pg2-v2: /opt/share[01;32muser2@eltex-practice2-pg2-v2[00m:[01;34m/opt/share[00m$ exit
+[?2004llogout
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# su -s /bin/bash user3
+[?2004l[?2004h]0;user3@eltex-practice2-pg2-v2: /root[01;32muser3@eltex-practice2-pg2-v2[00m:[01;34m/root[00m$ cd /opt/c[Kshare && touch file_user2[K3.txt
+[?2004l[?2004h]0;user3@eltex-practice2-pg2-v2: /opt/share[01;32muser3@eltex-practice2-pg2-v2[00m:[01;34m/opt/share[00m$ exit
+[?2004lexit
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# chc[Kmod 3770 /i[Kopt/share
+[?2004l[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# ls -ld o[K/opt/share
+[?2004ldrwxrws--T 2 root sharegrp 4096 Oct 25 17:32 [0m[37;44m/opt/share[0m
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# stat -c "[K'%A %a %U:%G %n' /opt/share
+[?2004ldrwxrws--T 3770 root:sharegrp /opt/share
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# su - s[Kuser1
+[?2004l[?2004h]0;user1@eltex-practice2-pg2-v2: ~[01;32muser1@eltex-practice2-pg2-v2[00m:[01;34m~[00m$ cd /opt/share
+[?2004l[?2004h]0;user1@eltex-practice2-pg2-v2: /opt/share[01;32muser1@eltex-practice2-pg2-v2[00m:[01;34m/opt/share[00m$ rm -f file_user2.txt file_user3.txt
+[?2004lrm: cannot remove 'file_user2.txt': Operation not permitted
+rm: cannot remove 'file_user3.txt': Operation not permitted
+[?2004h]0;user1@eltex-practice2-pg2-v2: /opt/share[01;32muser1@eltex-practice2-pg2-v2[00m:[01;34m/opt/share[00m$ ls -ls
+[?2004ltotal 0
+0 -rw-r----- 1 user1 sharegrp 0 Oct 25 17:23 file_user1.txt
+0 -rw-rw-r-- 1 user2 sharegrp 0 Oct 25 17:30 file_user2.txt
+0 -rw-rw-r-- 1 user3 sharegrp 0 Oct 25 17:32 file_user3.txt
+[?2004h]0;user1@eltex-practice2-pg2-v2: /opt/share[01;32muser1@eltex-practice2-pg2-v2[00m:[01;34m/opt/share[00m$ Script started on 2026-10-26 14:15:34+00:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="77" LINES="46"]
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# [7mcat ~/.bash_history[27m
+[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccat ~/.bash_history
+[A
+[?2004lhostname
+whoami
+ip a | grep 172.16.9
+useradd -m -s /bin/bash user1
+passwd user1
+id user1
+getent passwd user1
+ls -ld /home/user1
+adduser user2
+adduser user3
+id user2
+id user3
+getent passwd user2 user3
+ls -ld /home/user2 /home/user3
+chage -M 10 user1
+chage -M 10 user2
+chage -M 10 user3
+chage -l user1
+chage -l user2
+chage -l user3
+grep -E '^user[123]:' /etc/shadow | awk -F: '{print $1": max="$5}'
+cat > /etc/motd << 'EOF'
+Практика 2
+Конинский Алексей
+EOF
+
+cat /etc/motd
+which rsync || apt install -y rsync
+mkdir -p /root/etc_backup
+rsync -a /etc/ /root/etc_backup/
+ls -ld /root/etc_backup
+ls /root/etc_backup | head
+du -sh /etc/ root/etc_backup
+diff -q /etc/passwd /root/etc_backup/passwd && echo "passwd OK"
+diff -q /etc/motd /root/etc_backup/motd && echo "motd OK"
+cd /root
+which tar gzip bzip2 7z || apt install -y p7zip-full
+tar -czf etc_backup.tar.gz etc_backup
+tar -cjf etc_backup.tar.bz2 etc_backup
+7z a -t7z etc_backup.tar.7z etc_backup > /dev/null
+apt install -y bzip2
+cd /root
+rm -f etc_backup.tar.bz2
+tar -cjf etc_backup.tar.bz2 etc_backup
+rm -f etc_backup.tar.7z
+7z a -snl -t7z etc_backup.tar.7z etc_backup > /dev/null
+echo "exit=$?"
+ls -lh etc_backup.tar.7z
+ls -lh /root/etc_backup.tar.gz /root/etc_backup.tar.bz2 /root/etc_backup.tar.7z
+du -sh /root/etc_backup
+for f in /root/etc_backup.tar.gz /root/etc_backup.tar.bz2 /root/etc_backup.tar.7z; do printf '%-30s %10s bytes\n' "$f" "$(stat -c%s "$f")" done; 
+for f in /root/etc_backup.tar.gz /root/etc_backup.tar.bz2 /root/etc_backup.tar.7z; do printf '%-30s %10s bytes\n' "$f" "$(stat -c%s "$f")"; done
+tar -tzf etc_backup.tar.gz | head -3
+tar -tjf etc_backup.tar.bz2 | head -3
+7z l etc_backup.tar.7z | grep -E 'passwd|shadow|motd' | head
+cd /root
+which tar gzip bzip2 7z
+rm -f etc_backup.tar.gz etc_backup.tar.bz2 etc_backup.tar.7z
+tar -czf etc_backup.tar.gz  etc_backup
+tar -cjf etc_backup.tar.bz2 etc_backup
+7z a -snl -t7z etc_backup.tar.7z etc_backup > /dev/null
+echo "7z exit=$?"
+ls -lh etc_backup.tar.gz etc_backup.tar.bz2 etc_backup.tar.7z
+du -sh etc_backup
+for f in etc_backup.tar.gz etc_backup.tar.bz2 etc_backup.tar.7z; do printf '%-25s %10s bytes\n' "$f" "$(stat -c%s "$f")"; done
+tar -tzf etc_backup.tar.gz  | head -3
+tar -tjf etc_backup.tar.bz2 | head -3
+7z l etc_backup.tar.7z | grep -E 'passwd|motd' | head -5
+echo "Обновлено $(date '+%Y-%m-%d %H:%M:%S')" >> etc/motd
+man usermod
+usermod -s /usr/sbin/nologin user3
+getent passwd user3
+su - user3
+su -s /bin/bash user3
+getent passwd user3
+groupadd sharegrp
+usermod -aG sharegrp user1
+usermod -aG sharegrp user2
+usermod -aG sharegrp user3
+groups user1 user2 user3
+id user1
+id user2
+id user3
+getent group sharegrp
+mkdir -p /opt/share
+chgrp sharegrp /opt/share
+chnod 2770 /opt/share
+mkdir -p /opt/share
+chgrp sharegrp /opt/share
+chmod 2770 /opt/share
+ls -ld /opt/share
+stat -c '%A %U:%G %n' /opt/share
+getent group sharegrp
+export MYUSER=eltex-pg2-v2
+echo "MYUSER=$MYUSER"
+script -a /root/practice2_${MYUSER}_part1.log
+id user1; id user2; id user3
+getent passwd user1 user2 user3
+ls -ld /home/user1 /home/user2 /home/user3
+groups user1 user2 user3
+getent group sharegrp
+ls -ld /opt/share
+stat -c '%A %U:%G %n' /opt/share
+grep -n 'unmask' /home/user1/.bashrc
+su - user1
+grep -n 'unmask' /home/user1/.bashrc
+grep -n 'umask' /home/user1/.bashrc
+echo 'umask 027' >> /home/user/.bashrc
+rm -f /home/user1/test_umask
+grep -n 'umask' /home/user1/.bashrc
+echo 'unmask 027' >> /home/user1/.bashrc
+grep -n 'umask' /home/user1/.bashrc
+sed -i '/unmask 027/d; /umask 027/d' /home/user1/.bashrc
+echo 'umask 027' >> /home/user1/.bashrc
+grep -n 'umask' /home/user1/.bashrc
+su - user1
+grep -n 'umask' /home/user1/.bashrc
+su -user1
+grep -n 'umask' /home/user1/.bashrc
+su - user1
+su - user2
+su -s /bin/bash user3
+su - user1
+su - user2
+su -s /bin/bash user3
+chmod 3770 /opt/share
+ls -ld /opt/share
+stat -c '%A %a %U:%G %n' /opt/share
+su - user1
+which sudo dmesg
+cat /proc/sys/kernel/dmesg_restrict
+echo 'user1 ALL=(ALL) NOPASSWD: /usr/bin/dmesg' > /etc/sudoers.d/user1_dmesg
+chmod 440 /etc/sudoers.d/user1_dmesg
+visudo -c
+su - user1
+cat > /usr/local/bin/dmesg_user2.sh << 'EOF'
+#!/bin/bash
+exec /usr/bin/dmesg
+EOF
+
+chmod 4755 /usr/local/bin/dmesg_user2.sh
+ls -l /usr/local/bin/dmesg_user2.sh
+su - user2
+echo "Обновлено $(date '+%Y-%m-%d %H:%M:%S')" >> etc/motd
+echo "Обновлено $(date '+%Y-%m-%d %H:%M:%S')" >> /etc/motd
+cat /etc/motd
+rsync -a /etc/ /root/etc_backup/
+diff -q /etc/motd /root/etc_backup/motd && echo "motd synced"
+ls -l /etc/motd /root/etc_backup/motd
+rm -f etc_backup.tar.gz
+tar -czf etc_backup.tar.gz etc_backup
+tar -tzf etc_backup.tar.gz | grep 'etc_backup/motd$'
+tar -xzf etc_backup.tar.gz -O etc_backup/motd
+ls -lh etc_backup.tar.gz
+cd /root
+tar -djf etc_backup.tar.bz2 -C /root
+echo "tar --diff exit=$?"
+rm -rf /tmp/etc_bz2_cmp
+mkdir -p /tmp/etc_bz2_cmp
+tar -xjf etc_backup.tar.bz2 -C /tmp/etc_bz2_cmp
+diff -r /tmp/etc_bz2_cmp/etc_backup /root/etc_backup
+echo "diff exit=$?"
+diff /tmp/etc_bz2_cmp/etc_backup/motd /root/etc_backup/motd
+logout
+cd /root
+rm -rf /root/etc_backup_gzip
+mkdir -p /root/etc_backup_gzip
+tar -xzf etc_backup.tar.gz -C /root/etc_backup_gzip
+ls -l /root/etc_backup_gzip
+ls -l /root/etc_backup_gzip/etc_backup/motd
+rm -rf /root/etc_backup_7zip
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# [7mcat /proc/sys/kernel/dmesg_restrict[27m[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccat /proc/sys/kernel/dmesg_restrict
+[?2004l1
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# [7mls -l /usr/local/bin/dmesg_user2.sh[27m[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cls -l /usr/local/bin/dmesg_user2.sh
+[?2004l-rwsr-xr-x 1 root root 32 Oct 25 17:46 [0m[37;41m/usr/local/bin/dmesg_user2.sh[0m
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# [7mcat /etc/sudoers.d/user1_dmesg[27mcat /etc/sudoers.d/user1_dmesg
+[?2004luser1 ALL=(ALL) NOPASSWD: /usr/bin/dmesg
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# [7mchage -l user1 | grep -i maximum[27mchage -l user1 | grep -i maximum
+[?2004l[01;31m[KMaximum[m[K number of days between password change		: 10
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# [7mcat /etc/motd[27mcat /etc/motd
+[?2004lПрактика 2
+Конинский Алексей
+Обновлено 2026-10-25 20:27:50
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# [7mls -ld /root/etc_backup[27mls -ld /root/etc_backup
+[?2004ldrwxr-xr-x 109 root root 4096 Oct 25 18:22 [0m[01;34m/root/etc_backup[0m
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# [7mls -lh /root/etc_backup.tar.gz /root/etc_backu[27m[7mp[27m[7m.tar.bz2 /root/etc_backup.tar.7z[27m[Als -lh /root/etc_backup.tar.gz /root/etc_backup.tar.bz2 /root/etc_backup.tar.7z
+[?2004l-rw-r--r-- 1 root root 439K Oct 25 19:00 [0m[01;31m/root/etc_backup.tar.7z[0m
+-rw-r--r-- 1 root root 526K Oct 25 19:00 [01;31m/root/etc_backup.tar.bz2[0m
+-rw-r--r-- 1 root root 563K Oct 25 20:29 [01;31m/root/etc_backup.tar.gz[0m
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# [7mls -l /root/etc_backup_gzip/etc_backup/motd /r[27m[7mo[27m[7mot/etc_backup_7zip/etc_backup/motd[27m[Als -l /root/etc_backup_gzip/etc_backup/motd /root/etc_backup_7zip/etc_backup/motd
+[?2004l-rw-r--r-- 1 root root 53 Oct 25 18:22 /root/etc_backup_7zip/etc_backup/motd
+-rw-r--r-- 1 root root 92 Oct 25 20:27 /root/etc_backup_gzip/etc_backup/motd
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# [7mdiff /root/etc_backup_gzip/etc_backup/motd /ro[27m[7mo[27m[7mt/etc_backup_7zip/etc_backup/motd[27m[Adiff /root/etc_backup_gzip/etc_backup/motd /root/etc_backup_7zip/etc_backup/motd
+[?2004l3d2
+< Обновлено 2026-10-25 20:27:50
+[?2004h]0;root@eltex-practice2-pg2-v2: ~root@eltex-practice2-pg2-v2:~# eix[K[Kxit
+[?2004lexit
+
+Script done on 2026-10-26 14:19:00+00:00 [COMMAND_EXIT_CODE="1"]
