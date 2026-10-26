@@ -1,0 +1,13 @@
+touch "eltex-pg2-v2_part3.log"
+mkdir -p D1/D2/D3
+touch D1/D2/file.txt
+mv D1/D2/file.txt D1/
+rm -rf D1/D2
+find / -type f -size +20M 2>/dev/null > "eltex-pg2-v2_part3_gt20M.log"
+find ~ -type f -mmin -1440
+which find
+find ~ -type f -mtime -1
+which find
+whereis find
+file /usr/bin/find
+file /boot/initrd.img*
