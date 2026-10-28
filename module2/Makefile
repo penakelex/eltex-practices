@@ -1,9 +1,9 @@
-.PHONY: all clean common calculator phonebook test unity format format-check install-hooks
+.PHONY: all clean common calculator phonebook permissions test unity format format-check install-hooks
 
 UNITY_DIR      = third_party/Unity
 UNITY_BASE_URL = https://raw.githubusercontent.com/ThrowTheSwitch/Unity/master/src
 
-all: calculator phonebook
+all: calculator phonebook permissions
 
 common:
 	$(MAKE) -C common
@@ -14,10 +14,14 @@ calculator: common
 phonebook: common
 	$(MAKE) -C phonebook
 
+permissions:
+	$(MAKE) -C permissions
+
 test: common
 	$(MAKE) -C common test
 	$(MAKE) -C calculator test
 	$(MAKE) -C phonebook test
+	$(MAKE) -C permissions test
 
 $(UNITY_DIR)/src/unity.c:
 	mkdir -p $(UNITY_DIR)/src
@@ -31,6 +35,7 @@ clean:
 	$(MAKE) -C common clean
 	$(MAKE) -C calculator clean
 	$(MAKE) -C phonebook clean
+	$(MAKE) -C permissions clean
 
 format:
 	find . -type f \( -name '*.c' -o -name '*.h' \) \
