@@ -1,4 +1,4 @@
-CC       = clang-23
+CC       = clang
 CFLAGS   = -std=c23 -Wall -Wextra -O2 -DUNITY_INCLUDE_DOUBLE
 CPPFLAGS = -Iinclude -I../common/include
 LDFLAGS  = -L../common/build/lib
