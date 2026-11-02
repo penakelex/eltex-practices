@@ -1,28 +1,14 @@
+#include "input_utils.h"
 #include "permissions.h"
 #include "view.h"
 
-#include <stdbool.h>
-#include <stdio.h>
 #include <string.h>
 
-constexpr size_t INPUT_BUFFER_SIZE = 256;
-
-static bool read_line(const char *prompt, char *buffer, size_t size) {
-  view_show_prompt(prompt);
-
-  if (fgets(buffer, (int)size, stdin) == nullptr) {
-    return false;
-  }
-
-  buffer[strcspn(buffer, "\n")] = '\0';
-  return true;
-}
-
 static void handle_input() {
-  char buffer[INPUT_BUFFER_SIZE];
+  char buffer[INPUT_LINE_BUFFER_SIZE];
 
-  if (!read_line("Введите права (например, 755 или rwxr-xr-x): ", buffer,
-                 sizeof(buffer))) {
+  if (!prompt_for_input("Введите права (например, 755 или rwxr-xr-x): ", buffer,
+                        sizeof(buffer))) {
     return;
   }
 
@@ -37,9 +23,9 @@ static void handle_input() {
 }
 
 static void handle_file() {
-  char buffer[INPUT_BUFFER_SIZE];
+  char buffer[INPUT_LINE_BUFFER_SIZE];
 
-  if (!read_line("Введите имя файла: ", buffer, sizeof(buffer))) {
+  if (!prompt_for_input("Введите имя файла: ", buffer, sizeof(buffer))) {
     return;
   }
 
@@ -60,11 +46,11 @@ static void handle_file() {
 }
 
 static void handle_modify() {
-  char current_buffer[INPUT_BUFFER_SIZE];
-  char command_buffer[INPUT_BUFFER_SIZE];
+  char current_buffer[INPUT_LINE_BUFFER_SIZE];
+  char command_buffer[INPUT_LINE_BUFFER_SIZE];
 
-  if (!read_line("Текущие права (например, 755 или rwxr-xr-x): ",
-                 current_buffer, sizeof(current_buffer))) {
+  if (!prompt_for_input("Текущие права (например, 755 или rwxr-xr-x): ",
+                        current_buffer, sizeof(current_buffer))) {
     return;
   }
 
@@ -75,8 +61,8 @@ static void handle_modify() {
     return;
   }
 
-  if (!read_line("Команда модификации (например, u+x,g-w): ", command_buffer,
-                 sizeof(command_buffer))) {
+  if (!prompt_for_input("Команда модификации (например, u+x,g-w): ",
+                        command_buffer, sizeof(command_buffer))) {
     return;
   }
 
@@ -97,10 +83,10 @@ static void handle_modify() {
 int main() {
   view_show_menu();
 
-  char buffer[INPUT_BUFFER_SIZE];
+  char buffer[INPUT_LINE_BUFFER_SIZE];
 
   while (true) {
-    if (!read_line("> ", buffer, sizeof(buffer))) {
+    if (!prompt_for_input("> ", buffer, sizeof(buffer))) {
       break;
     }
 

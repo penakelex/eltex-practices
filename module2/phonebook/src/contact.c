@@ -1,5 +1,6 @@
 #include <contact.h>
 #include <stdlib.h>
+#include <string.h>
 
 static void free_string_element(void *element) {
   free(*(char **)element);
@@ -29,4 +30,24 @@ void contact_free(Contact *contact) {
   vector_free(&contact->social_networks);
   vector_free(&contact->messengers);
   contact_initialize(contact);
+}
+
+static int compare_string(const char *left, const char *right) {
+  return strcmp(left != nullptr ? left : "", right != nullptr ? right : "");
+}
+
+int contact_compare(const Contact *left, const Contact *right) {
+  int result = compare_string(left->last_name, right->last_name);
+
+  if (result != 0) {
+    return result;
+  }
+
+  result = compare_string(left->first_name, right->first_name);
+
+  if (result != 0) {
+    return result;
+  }
+
+  return compare_string(left->middle_name, right->middle_name);
 }

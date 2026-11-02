@@ -1,7 +1,6 @@
 #pragma once
 
 #include <command.h>
-#include <stdbool.h>
 
 typedef enum { AST_NUMBER, AST_UNARY, AST_BINARY } AstKind;
 
@@ -24,7 +23,7 @@ typedef struct AstNode {
   } data;
 } AstNode;
 
-AstNode *ast_number(double value);
+AstNode *ast_number(const double value);
 AstNode *ast_unary(UnaryFunction function, AstNode *operand);
 AstNode *ast_binary(BinaryFunction function, AstNode *left, AstNode *right);
 void ast_free(AstNode *node);

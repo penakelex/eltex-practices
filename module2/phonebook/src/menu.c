@@ -1,7 +1,6 @@
 #include <fields.h>
 #include <input_utils.h>
 #include <menu.h>
-#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -132,15 +131,15 @@ static void edit_contact(Phonebook *phonebook) {
     return;
   }
 
-  const uint32_t number = ask_for_uint32("Номер контакта (0 — отмена): ", 0,
-                                         (uint32_t)phonebook->contacts.count);
+  const uint32_t count = (uint32_t)phonebook_count(phonebook);
+  const uint32_t number =
+      ask_for_uint32("Номер контакта (0 — отмена): ", 0, count);
 
   if (number == 0) {
     return;
   }
 
-  Contact *const contact =
-      (Contact *)vector_at(&phonebook->contacts, (size_t)(number - 1));
+  Contact *const contact = phonebook_at(phonebook, (size_t)(number - 1));
 
   puts("\nКакие поля редактировать?");
   puts("  0. Все поля");
@@ -164,6 +163,12 @@ static void edit_contact(Phonebook *phonebook) {
 
     if (field_mask != 0) {
       edit_selected_fields(contact, field_mask);
+
+      if (field_mask &
+          (FIELD_LAST_NAME | FIELD_FIRST_NAME | FIELD_MIDDLE_NAME)) {
+        phonebook_reorder(phonebook);
+      }
+
       puts("Изменения применены.");
       return;
     }
@@ -177,9 +182,9 @@ static void delete_contact(Phonebook *phonebook) {
     return;
   }
 
+  const uint32_t count = (uint32_t)phonebook_count(phonebook);
   const uint32_t number =
-      ask_for_uint32("Номер контакта для удаления (0 — отмена): ", 0,
-                     (uint32_t)phonebook->contacts.count);
+      ask_for_uint32("Номер контакта для удаления (0 — отмена): ", 0, count);
 
   if (number == 0) {
     return;
@@ -199,9 +204,10 @@ void menu_run(Phonebook *phonebook) {
     puts("2. Добавить контакт");
     puts("3. Редактировать контакт");
     puts("4. Удалить контакт");
+    puts("5. Показать в виде дерева");
     puts("0. Выход");
 
-    const uint32_t choice = ask_for_uint32("Выбор: ", 0, 4);
+    const uint32_t choice = ask_for_uint32("Выбор: ", 0, 5);
 
     switch (choice) {
     case 0: {
@@ -221,6 +227,10 @@ void menu_run(Phonebook *phonebook) {
     }
     case 4: {
       delete_contact(phonebook);
+      break;
+    }
+    case 5: {
+      view_print_phonebook_tree(phonebook);
       break;
     }
     default: {

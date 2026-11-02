@@ -1,3 +1,4 @@
+#include <errno.h>
 #include <input_utils.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -5,10 +6,10 @@
 
 constexpr size_t INTEGER_INPUT_BUFFER_SIZE = 32;
 
-void read_line(char *buffer, const size_t buffer_size) {
+bool read_line(char *buffer, const size_t buffer_size) {
   if (fgets(buffer, (int)buffer_size, stdin) == nullptr) {
     buffer[0] = '\0';
-    return;
+    return false;
   }
 
   size_t length = strlen(buffer);
@@ -17,13 +18,42 @@ void read_line(char *buffer, const size_t buffer_size) {
          (buffer[length - 1] == '\n' || buffer[length - 1] == '\r')) {
     buffer[--length] = '\0';
   }
+
+  return true;
 }
 
-void prompt_for_input(const char *message, char *buffer,
+bool prompt_for_input(const char *message, char *buffer,
                       const size_t buffer_size) {
   fputs(message, stdout);
   fflush(stdout);
-  read_line(buffer, buffer_size);
+  return read_line(buffer, buffer_size);
+}
+
+bool parse_uint32(const char *input, uint32_t *out) {
+  if (input == nullptr || out == nullptr) {
+    return false;
+  }
+
+  if (input[0] == '\0') {
+    return false;
+  }
+
+  for (const char *p = input; *p != '\0'; p++) {
+    if (*p < '0' || *p > '9') {
+      return false;
+    }
+  }
+
+  errno = 0;
+  char *end_pointer = nullptr;
+  const unsigned long value = strtoul(input, &end_pointer, 10);
+
+  if (*end_pointer != '\0' || errno == ERANGE || value > UINT32_MAX) {
+    return false;
+  }
+
+  *out = (uint32_t)value;
+  return true;
 }
 
 uint32_t ask_for_uint32(const char *message, const uint32_t minimum,
@@ -32,12 +62,10 @@ uint32_t ask_for_uint32(const char *message, const uint32_t minimum,
 
   while (true) {
     prompt_for_input(message, buffer, sizeof buffer);
-    char *end_pointer = nullptr;
-    const unsigned long value = strtoul(buffer, &end_pointer, 10);
+    uint32_t value = 0;
 
-    if (end_pointer != buffer && *end_pointer == '\0' && value >= minimum &&
-        value <= maximum) {
-      return (uint32_t)value;
+    if (parse_uint32(buffer, &value) && value >= minimum && value <= maximum) {
+      return value;
     }
 
     puts("Некорректный ввод, попробуйте ещё раз.");

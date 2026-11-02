@@ -2,10 +2,14 @@
 
 #include "packet_router.h"
 
+#include "input_utils.h"
+
 #include <arpa/inet.h>
 #include <stdlib.h>
 
-constexpr uint32_t RANDOM_MASK = 0xFFFF;
+constexpr uint32_t RANDOM_MASK = 0xFFu;
+constexpr uint32_t PREFIX_MIN = 0;
+constexpr uint32_t PREFIX_MAX = 32;
 
 static bool parse_ipv4(const char *str, uint32_t *out) {
   struct in_addr addr;
@@ -18,11 +22,52 @@ static bool parse_ipv4(const char *str, uint32_t *out) {
   return true;
 }
 
-static uint32_t generate_random_uint32() {
-  const uint32_t high = (uint32_t)rand() & RANDOM_MASK;
-  const uint32_t low = (uint32_t)rand() & RANDOM_MASK;
+static bool parse_prefix_length(const char *str, uint32_t *out) {
+  uint32_t value = 0;
 
-  return (high << 16) | low;
+  if (!parse_uint32(str, &value)) {
+    return false;
+  }
+
+  if (value < PREFIX_MIN || value > PREFIX_MAX) {
+    return false;
+  }
+
+  *out = value;
+  return true;
+}
+
+static bool parse_mask(const char *str, uint32_t *out) {
+  if (str == nullptr) {
+    return false;
+  }
+
+  if (str[0] != '/') {
+    return parse_ipv4(str, out);
+  }
+
+  uint32_t prefix = 0;
+
+  if (!parse_prefix_length(str + 1, &prefix)) {
+    return false;
+  }
+
+  if (prefix == 0) {
+    *out = 0;
+  } else {
+    *out = 0xFFFFFFFFu << (32u - prefix);
+  }
+
+  return true;
+}
+
+static uint32_t generate_random_uint32() {
+  const uint32_t first = (uint32_t)rand() & RANDOM_MASK;
+  const uint32_t second = (uint32_t)rand() & RANDOM_MASK;
+  const uint32_t third = (uint32_t)rand() & RANDOM_MASK;
+  const uint32_t fourth = (uint32_t)rand() & RANDOM_MASK;
+
+  return (first << 24) | (second << 16) | (third << 8) | fourth;
 }
 
 void packet_stats_initialize(PacketStats *stats) {
@@ -63,11 +108,11 @@ PacketRouterStatus packet_router_run(const char *gateway_str,
     return PACKET_ROUTER_INVALID_GATEWAY;
   }
 
-  if (!parse_ipv4(mask_str, &mask)) {
+  if (!parse_mask(mask_str, &mask)) {
     return PACKET_ROUTER_INVALID_MASK;
   }
 
-  packet_stats_initialize(stats);
+  // packet_stats_initialize(stats);
 
   for (uint32_t i = 0; i < packet_count; i++) {
     const uint32_t ip = generate_random_uint32();

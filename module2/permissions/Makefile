@@ -1,8 +1,8 @@
 CC       = clang
 CFLAGS   = -std=c23 -Wall -Wextra -O2 -DUNITY_INCLUDE_DOUBLE
-CPPFLAGS = -Iinclude
-LDFLAGS  =
-LDLIBS   =
+CPPFLAGS = -Iinclude -I../common/include
+LDFLAGS  = -L../common/build/lib
+LDLIBS   = -lcommon
 
 UNITY_DIR      = ../third_party/Unity
 UNITY_BASE_URL = https://raw.githubusercontent.com/ThrowTheSwitch/Unity/master/src
@@ -30,9 +30,12 @@ TEST_DEPS    = $(TEST_OBJECTS:.o=.d)
 
 UNITY_OBJ = $(TEST_OBJ_DIR)/unity.o
 
-$(TARGET): $(OBJECTS)
+$(TARGET): $(OBJECTS) ../common/build/lib/libcommon.a
 	mkdir -p $(BIN_DIR)
 	$(CC) $(CFLAGS) -o $@ $(OBJECTS) $(LDFLAGS) $(LDLIBS)
+
+../common/build/lib/libcommon.a:
+	$(MAKE) -C ../common
 
 $(OBJ_DIR)/%.o: src/%.c
 	mkdir -p $(dir $@)
@@ -40,6 +43,9 @@ $(OBJ_DIR)/%.o: src/%.c
 
 test: $(TEST_TARGET)
 	./$(TEST_TARGET)
+
+run: $(TARGET)
+	./$(TARGET) $(ARGS)
 
 $(UNITY_SRC):
 	mkdir -p $(UNITY_DIR)/src
@@ -51,7 +57,7 @@ $(UNITY_OBJ): $(UNITY_SRC)
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(UNITY_INC) -c $< -o $@
 
-$(TEST_TARGET): $(TEST_OBJECTS) $(UNITY_OBJ)
+$(TEST_TARGET): $(TEST_OBJECTS) $(UNITY_OBJ) ../common/build/lib/libcommon.a
 	mkdir -p $(TEST_BIN_DIR)
 	$(CC) $(CFLAGS) -o $@ $(TEST_OBJECTS) $(UNITY_OBJ) $(LDFLAGS) $(LDLIBS)
 
@@ -65,4 +71,4 @@ $(TEST_OBJ_DIR)/%.o: %.c $(UNITY_SRC)
 clean:
 	rm -rf $(BUILD_DIR)
 
-.PHONY: clean test
+.PHONY: clean test run

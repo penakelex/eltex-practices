@@ -1,5 +1,10 @@
+#include <phonebook.h>
 #include <stdio.h>
 #include <view.h>
+
+typedef struct {
+  bool printed_any;
+} PhonebookPrintState;
 
 static void view_print_string_list(const char *label,
                                    const Vector *string_vector) {
@@ -36,16 +41,44 @@ void view_print_contact(const Contact *contact, const size_t number) {
   view_print_string_list("Мессенджеры", &contact->messengers);
 }
 
-bool view_print_phonebook(const Phonebook *phonebook) {
-  if (phonebook->contacts.count == 0) {
+static void view_print_visitor(const Contact *contact, const size_t index,
+                               void *context) {
+  PhonebookPrintState *state = context;
+  state->printed_any = true;
+  view_print_contact(contact, index + 1);
+}
+
+static void view_print_tree_visitor(const Contact *contact, const char *prefix,
+                                    void *context) {
+  PhonebookPrintState *state = context;
+  state->printed_any = true;
+  printf("%s%s %s\n", prefix, contact->last_name, contact->first_name);
+}
+
+bool view_print_phonebook(Phonebook *phonebook) {
+  PhonebookPrintState state = {.printed_any = false};
+  phonebook_dump(phonebook, view_print_visitor, &state);
+
+  if (!state.printed_any) {
     puts("Список пуст.");
     return false;
   }
 
-  for (size_t index = 0; index < phonebook->contacts.count; ++index) {
-    const Contact *contact =
-        (const Contact *)vector_at(&phonebook->contacts, index);
-    view_print_contact(contact, index + 1);
+  return true;
+}
+
+bool view_print_phonebook_tree(Phonebook *phonebook) {
+  if (!phonebook_is_hierarchical(phonebook)) {
+    puts("Эта коллекция не является иерархической, вывожу плоский список.");
+    return view_print_phonebook(phonebook);
+  }
+
+  PhonebookPrintState state = {.printed_any = false};
+  phonebook_dump_tree(phonebook, view_print_tree_visitor, &state);
+
+  if (!state.printed_any) {
+    puts("Список пуст.");
+    return false;
   }
 
   return true;

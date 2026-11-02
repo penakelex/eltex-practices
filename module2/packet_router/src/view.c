@@ -4,7 +4,9 @@
 
 void view_print_usage(const char *program_name) {
   printf("Usage: %s <gateway_ip> <subnet_mask> <packet_count>\n", program_name);
+  printf("  <subnet_mask> can be dotted (255.255.255.0) or CIDR (/24).\n");
   printf("Example: %s 192.168.1.1 255.255.255.0 1000\n", program_name);
+  printf("Example: %s 192.168.1.1 /24 1000\n", program_name);
 }
 
 void view_print_error(PacketRouterStatus status) {

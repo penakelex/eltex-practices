@@ -1,8 +1,8 @@
+#include "input_utils.h"
 #include "packet_router.h"
 #include "view.h"
 
 #include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
@@ -14,16 +14,13 @@ int main(int argc, char **argv) {
 
   const char *gateway_str = argv[1];
   const char *mask_str = argv[2];
-  char *endptr = nullptr;
-  const unsigned long packet_count_ul = strtoul(argv[3], &endptr, 10);
+  uint32_t packet_count = 0;
 
-  if (endptr == argv[3] || *endptr != '\0' || packet_count_ul == 0 ||
-      packet_count_ul > UINT32_MAX) {
+  if (!parse_uint32(argv[3], &packet_count) || packet_count == 0) {
     view_print_error(PACKET_ROUTER_INVALID_PACKET_COUNT);
     return EXIT_FAILURE;
   }
 
-  const uint32_t packet_count = (uint32_t)packet_count_ul;
   PacketStats stats;
 
   packet_stats_initialize(&stats);

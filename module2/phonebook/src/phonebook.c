@@ -1,26 +1,73 @@
 #include <phonebook.h>
 
-static void free_contact_element(void *element) {
-  contact_free((Contact *)element);
-}
+bool phonebook_initialize(Phonebook *phonebook, const char *collection_name) {
+  const CollectionOperations *operations =
+      collection_get_operations(collection_name);
 
-void phonebook_initialize(Phonebook *phonebook) {
-  vector_initialize(&phonebook->contacts, sizeof(Contact),
-                    free_contact_element);
+  if (operations == nullptr) {
+    return false;
+  }
+
+  void *data = operations->create();
+
+  if (data == nullptr) {
+    return false;
+  }
+
+  phonebook->data = data;
+  phonebook->operations = operations;
+  return true;
 }
 
 void phonebook_free(Phonebook *phonebook) {
-  vector_free(&phonebook->contacts);
+  if (phonebook->operations != nullptr && phonebook->data != nullptr) {
+    phonebook->operations->destroy(phonebook->data);
+  }
+
+  phonebook->data = nullptr;
+  phonebook->operations = nullptr;
 }
 
 bool phonebook_add(Phonebook *phonebook, Contact *contact) {
-  if (!vector_push_back(&phonebook->contacts, contact)) {
+  if (!phonebook->operations->add(phonebook->data, contact)) {
     return false;
   }
+
   contact_initialize(contact);
   return true;
 }
 
-bool phonebook_remove(Phonebook *phonebook, const size_t index) {
-  return vector_remove_at(&phonebook->contacts, index);
+size_t phonebook_count(const Phonebook *phonebook) {
+  return phonebook->operations->count(phonebook->data);
+}
+
+Contact *phonebook_at(Phonebook *phonebook, size_t index) {
+  return phonebook->operations->at(phonebook->data, index);
+}
+
+bool phonebook_remove(Phonebook *phonebook, size_t index) {
+  return phonebook->operations->remove_at(phonebook->data, index);
+}
+
+void phonebook_reorder(Phonebook *phonebook) {
+  if (phonebook->operations != nullptr &&
+      phonebook->operations->reorder != nullptr) {
+    phonebook->operations->reorder(phonebook->data);
+  }
+}
+
+void phonebook_dump(Phonebook *phonebook, ContactVisitor visitor,
+                    void *context) {
+  phonebook->operations->dump(phonebook->data, visitor, context);
+}
+
+void phonebook_dump_tree(Phonebook *phonebook, TreeVisitor visitor,
+                         void *context) {
+  if (phonebook->operations->dump_tree != nullptr) {
+    phonebook->operations->dump_tree(phonebook->data, visitor, context);
+  }
+}
+
+bool phonebook_is_hierarchical(const Phonebook *phonebook) {
+  return phonebook->operations->dump_tree != nullptr;
 }

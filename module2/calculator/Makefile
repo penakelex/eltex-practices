@@ -44,6 +44,9 @@ $(OBJ_DIR)/%.o: src/%.c
 test: $(TEST_TARGET)
 	./$(TEST_TARGET)
 
+run: $(TARGET)
+	./$(TARGET) $(ARGS)
+
 $(UNITY_SRC):
 	mkdir -p $(UNITY_DIR)/src
 	curl -fsSL $(UNITY_BASE_URL)/unity.c -o $(UNITY_DIR)/src/unity.c
@@ -68,4 +71,4 @@ $(TEST_OBJ_DIR)/%.o: %.c $(UNITY_SRC)
 clean:
 	rm -rf $(BUILD_DIR)
 
-.PHONY: clean test
+.PHONY: clean test run

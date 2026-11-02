@@ -13,7 +13,7 @@ BUILD_DIR = build
 OBJ_DIR   = $(BUILD_DIR)/obj
 BIN_DIR   = $(BUILD_DIR)/bin
 
-SOURCES = $(wildcard src/*.c)
+SOURCES = $(wildcard src/*.c) $(wildcard src/collections/*.c)
 OBJECTS = $(patsubst src/%.c,$(OBJ_DIR)/%.o,$(SOURCES))
 DEPS    = $(OBJECTS:.o=.d)
 TARGET  = $(BIN_DIR)/phonebook
@@ -24,7 +24,8 @@ TEST_BIN_DIR   = $(TEST_BUILD_DIR)/bin
 TEST_TARGET    = $(TEST_BIN_DIR)/test_phonebook
 
 TEST_SOURCES = $(wildcard tests/*.c) \
-               $(filter-out src/main.c,$(wildcard src/*.c))
+               $(filter-out src/main.c,$(wildcard src/*.c)) \
+               $(wildcard src/collections/*.c)
 TEST_OBJECTS = $(patsubst %.c,$(TEST_OBJ_DIR)/%.o,$(TEST_SOURCES))
 TEST_DEPS    = $(TEST_OBJECTS:.o=.d)
 
@@ -43,6 +44,9 @@ $(OBJ_DIR)/%.o: src/%.c
 
 test: $(TEST_TARGET)
 	./$(TEST_TARGET)
+
+run: $(TARGET)
+	./$(TARGET) $(ARGS)
 
 $(UNITY_SRC):
 	mkdir -p $(UNITY_DIR)/src
@@ -68,4 +72,4 @@ $(TEST_OBJ_DIR)/%.o: %.c $(UNITY_SRC)
 clean:
 	rm -rf $(BUILD_DIR)
 
-.PHONY: clean test
+.PHONY: clean test run

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <stdbool.h>
 #include <stddef.h>
 
 typedef void (*ElementDestructor)(void *element);
@@ -18,5 +17,6 @@ void vector_initialize(Vector *vector, size_t element_size,
 void vector_free(Vector *vector);
 void vector_clear(Vector *vector);
 bool vector_push_back(Vector *vector, const void *element);
+bool vector_insert_at(Vector *vector, size_t index, const void *element);
 void *vector_at(const Vector *vector, size_t index);
 bool vector_remove_at(Vector *vector, size_t index);

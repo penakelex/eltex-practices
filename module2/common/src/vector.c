@@ -32,7 +32,11 @@ void vector_free(Vector *vector) {
   vector->capacity = 0;
 }
 
-bool vector_push_back(Vector *vector, const void *element) {
+bool vector_insert_at(Vector *vector, const size_t index, const void *element) {
+  if (index > vector->count) {
+    return false;
+  }
+
   if (vector->count == vector->capacity) {
     const size_t new_capacity = (vector->capacity == 0)
                                     ? VECTOR_INITIAL_CAPACITY
@@ -47,10 +51,20 @@ bool vector_push_back(Vector *vector, const void *element) {
     vector->capacity = new_capacity;
   }
 
-  memcpy((char *)vector->data + vector->count * vector->element_size, element,
+  if (index < vector->count) {
+    memmove((char *)vector->data + (index + 1) * vector->element_size,
+            (char *)vector->data + index * vector->element_size,
+            (vector->count - index) * vector->element_size);
+  }
+
+  memcpy((char *)vector->data + index * vector->element_size, element,
          vector->element_size);
   ++vector->count;
   return true;
+}
+
+bool vector_push_back(Vector *vector, const void *element) {
+  return vector_insert_at(vector, vector->count, element);
 }
 
 void *vector_at(const Vector *vector, const size_t index) {

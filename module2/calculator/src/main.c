@@ -1,6 +1,5 @@
 #include <calculator.h>
 #include <input_utils.h>
-#include <stdbool.h>
 #include <string.h>
 #include <view.h>
 

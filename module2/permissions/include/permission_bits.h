@@ -1,6 +1,5 @@
 #pragma once
 
-#include <stdbool.h>
 #include <stdint.h>
 
 [[maybe_unused]] static constexpr uint32_t PERMISSION_MASK = 0x0FFFu;

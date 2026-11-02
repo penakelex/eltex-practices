@@ -16,3 +16,4 @@ typedef struct {
 
 void contact_initialize(Contact *contact);
 void contact_free(Contact *contact);
+int contact_compare(const Contact *a, const Contact *b);

@@ -1,9 +1,9 @@
-.PHONY: all clean common calculator phonebook permissions packet_router test unity format format-check install-hooks
+.PHONY: all clean common calculator phonebook permissions packet_router priority_queue test unity format format-check install-hooks run run-calculator run-phonebook run-permissions run-packet_router run-priority_queue
 
 UNITY_DIR      = third_party/Unity
 UNITY_BASE_URL = https://raw.githubusercontent.com/ThrowTheSwitch/Unity/master/src
 
-all: calculator phonebook permissions packet_router
+all: calculator phonebook permissions packet_router priority_queue
 
 common:
 	$(MAKE) -C common
@@ -20,12 +20,35 @@ permissions:
 packet_router:
 	$(MAKE) -C packet_router
 
+priority_queue: common
+	$(MAKE) -C priority_queue
+
 test: common
 	$(MAKE) -C common test
 	$(MAKE) -C calculator test
 	$(MAKE) -C phonebook test
 	$(MAKE) -C permissions test
 	$(MAKE) -C packet_router test
+	$(MAKE) -C priority_queue test
+
+run:
+	@echo "Укажите приложение: make run-calculator | run-phonebook | run-permissions | run-packet_router | run-priority_queue"
+	@echo "Параметры передаются через ARGS=\"...\": make run-phonebook ARGS=\"--collection tree\""
+
+run-calculator: calculator
+	./calculator/build/bin/calculator $(ARGS)
+
+run-phonebook: phonebook
+	./phonebook/build/bin/phonebook $(ARGS)
+
+run-permissions: permissions
+	./permissions/build/bin/permissions $(ARGS)
+
+run-packet_router: packet_router
+	./packet_router/build/bin/packet_router $(ARGS)
+
+run-priority_queue: priority_queue
+	./priority_queue/build/bin/priority_queue $(ARGS)
 
 $(UNITY_DIR)/src/unity.c:
 	mkdir -p $(UNITY_DIR)/src
@@ -41,6 +64,7 @@ clean:
 	$(MAKE) -C phonebook clean
 	$(MAKE) -C permissions clean
 	$(MAKE) -C packet_router clean
+	$(MAKE) -C priority_queue clean
 
 format:
 	find . -type f \( -name '*.c' -o -name '*.h' \) \

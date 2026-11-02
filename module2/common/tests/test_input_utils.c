@@ -74,8 +74,35 @@ static void test_read_line_truncates_on_buffer_size() {
   TEST_ASSERT_EQUAL_STRING("abcd", buffer);
 }
 
+static void test_parse_uint32_valid() {
+  uint32_t value = 0;
+
+  TEST_ASSERT_TRUE(parse_uint32("0", &value));
+  TEST_ASSERT_EQUAL_UINT32(0, value);
+
+  TEST_ASSERT_TRUE(parse_uint32("123", &value));
+  TEST_ASSERT_EQUAL_UINT32(123, value);
+
+  TEST_ASSERT_TRUE(parse_uint32("4294967295", &value));
+  TEST_ASSERT_EQUAL_UINT32(UINT32_MAX, value);
+}
+
+static void test_parse_uint32_invalid() {
+  uint32_t value = 0;
+
+  TEST_ASSERT_FALSE(parse_uint32(NULL, &value));
+  TEST_ASSERT_FALSE(parse_uint32("", &value));
+  TEST_ASSERT_FALSE(parse_uint32("abc", &value));
+  TEST_ASSERT_FALSE(parse_uint32("12a", &value));
+  TEST_ASSERT_FALSE(parse_uint32("-5", &value));
+  TEST_ASSERT_FALSE(parse_uint32("4294967296", &value));
+  TEST_ASSERT_FALSE(parse_uint32("123", NULL));
+}
+
 void test_input_utils_run() {
   test_read_line_strips_newline();
   test_read_line_strips_carriage_return();
   test_read_line_truncates_on_buffer_size();
+  test_parse_uint32_valid();
+  test_parse_uint32_invalid();
 }

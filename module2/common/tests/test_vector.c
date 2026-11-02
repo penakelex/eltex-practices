@@ -96,10 +96,39 @@ static void test_destructor_called() {
   vector_free(&vector);
 }
 
+static void test_insert_at() {
+  Vector vector;
+  vector_initialize(&vector, sizeof(int), NULL);
+
+  const int values[] = {10, 20, 30};
+  for (size_t index = 0; index < 3; ++index) {
+    TEST_ASSERT_TRUE(vector_push_back(&vector, &values[index]));
+  }
+
+  const int first = 5;
+  TEST_ASSERT_TRUE(vector_insert_at(&vector, 0, &first));
+  TEST_ASSERT_EQUAL_INT(5, *(int *)vector_at(&vector, 0));
+  TEST_ASSERT_EQUAL_INT(10, *(int *)vector_at(&vector, 1));
+
+  const int middle = 25;
+  TEST_ASSERT_TRUE(vector_insert_at(&vector, 3, &middle));
+  TEST_ASSERT_EQUAL_INT(25, *(int *)vector_at(&vector, 3));
+  TEST_ASSERT_EQUAL_INT(30, *(int *)vector_at(&vector, 4));
+
+  const int last = 99;
+  TEST_ASSERT_TRUE(vector_insert_at(&vector, vector.count, &last));
+  TEST_ASSERT_EQUAL_INT(99, *(int *)vector_at(&vector, vector.count - 1));
+
+  TEST_ASSERT_FALSE(vector_insert_at(&vector, vector.count + 1, &last));
+
+  vector_free(&vector);
+}
+
 void test_vector_run() {
   test_initialize_starts_empty();
   test_push_back_grows();
   test_at_out_of_bounds();
   test_remove_at();
   test_destructor_called();
+  test_insert_at();
 }
