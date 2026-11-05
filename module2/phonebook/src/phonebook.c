@@ -49,11 +49,13 @@ bool phonebook_remove(Phonebook *phonebook, size_t index) {
   return phonebook->operations->remove_at(phonebook->data, index);
 }
 
-void phonebook_reorder(Phonebook *phonebook) {
-  if (phonebook->operations != nullptr &&
-      phonebook->operations->reorder != nullptr) {
-    phonebook->operations->reorder(phonebook->data);
+bool phonebook_reorder_element(Phonebook *phonebook, size_t index) {
+  if (phonebook->operations == nullptr ||
+      phonebook->operations->reorder_element == nullptr) {
+    return false;
   }
+
+  return phonebook->operations->reorder_element(phonebook->data, index);
 }
 
 void phonebook_dump(Phonebook *phonebook, ContactVisitor visitor,

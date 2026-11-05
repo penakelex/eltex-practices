@@ -1,4 +1,4 @@
-.PHONY: all clean common calculator phonebook permissions packet_router priority_queue test unity format format-check install-hooks run run-calculator run-phonebook run-permissions run-packet_router run-priority_queue
+.PHONY: all clean common list calculator phonebook permissions packet_router priority_queue test unity format format-check install-hooks run run-calculator run-phonebook run-phonebook-static run-permissions run-packet_router run-priority_queue
 
 UNITY_DIR      = third_party/Unity
 UNITY_BASE_URL = https://raw.githubusercontent.com/ThrowTheSwitch/Unity/master/src
@@ -7,6 +7,9 @@ all: calculator phonebook permissions packet_router priority_queue
 
 common:
 	$(MAKE) -C common
+
+list:
+	$(MAKE) -C list
 
 calculator: common
 	$(MAKE) -C calculator
@@ -25,6 +28,7 @@ priority_queue: common
 
 test: common
 	$(MAKE) -C common test
+	$(MAKE) -C list test
 	$(MAKE) -C calculator test
 	$(MAKE) -C phonebook test
 	$(MAKE) -C permissions test
@@ -40,6 +44,9 @@ run-calculator: calculator
 
 run-phonebook: phonebook
 	./phonebook/build/bin/phonebook $(ARGS)
+
+run-phonebook-static: phonebook
+	./phonebook/build/bin/phonebook-static $(ARGS)
 
 run-permissions: permissions
 	./permissions/build/bin/permissions $(ARGS)
@@ -60,6 +67,7 @@ unity: $(UNITY_DIR)/src/unity.c
 
 clean:
 	$(MAKE) -C common clean
+	$(MAKE) -C list clean
 	$(MAKE) -C calculator clean
 	$(MAKE) -C phonebook clean
 	$(MAKE) -C permissions clean

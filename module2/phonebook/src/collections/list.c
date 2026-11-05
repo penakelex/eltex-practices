@@ -1,194 +1,69 @@
 #include <collections/list.h>
-#include <stdlib.h>
-
-typedef struct ListNode {
-  Contact contact;
-  struct ListNode *previous;
-  struct ListNode *next;
-} ListNode;
+#include <list.h>
 
 typedef struct {
-  ListNode *head;
-  ListNode *tail;
-  size_t count;
-} ContactList;
+  ContactVisitor visitor;
+  void *context;
+} ListAdapterDump;
 
-static void *list_create(void) {
-  return calloc(1, sizeof(ContactList));
+static int list_adapter_compare(const void *left, const void *right) {
+  return contact_compare(left, right);
 }
 
-static void list_destroy(void *self) {
-  ContactList *list = self;
-
-  if (list == nullptr) {
-    return;
-  }
-
-  ListNode *node = list->head;
-
-  while (node != nullptr) {
-    ListNode *next = node->next;
-    contact_free(&node->contact);
-    free(node);
-    node = next;
-  }
-
-  free(list);
+static void list_adapter_destroy_contact(void *element) {
+  contact_free((Contact *)element);
 }
 
-static bool list_add(void *self, const Contact *contact) {
-  ContactList *list = self;
-  ListNode *node = malloc(sizeof *node);
-
-  if (node == nullptr) {
-    return false;
-  }
-
-  node->contact = *contact;
-  node->previous = nullptr;
-  node->next = nullptr;
-
-  ListNode *current = list->head;
-
-  while (current != nullptr &&
-         contact_compare(&current->contact, contact) <= 0) {
-    current = current->next;
-  }
-
-  if (current == nullptr) {
-    node->previous = list->tail;
-
-    if (list->tail != nullptr) {
-      list->tail->next = node;
-    } else {
-      list->head = node;
-    }
-
-    list->tail = node;
-  } else {
-    node->next = current;
-    node->previous = current->previous;
-
-    if (current->previous != nullptr) {
-      current->previous->next = node;
-    } else {
-      list->head = node;
-    }
-
-    current->previous = node;
-  }
-
-  ++list->count;
-  return true;
+static void *list_adapter_create(void) {
+  return list_create(sizeof(Contact), list_adapter_compare,
+                     list_adapter_destroy_contact);
 }
 
-static size_t list_count(const void *self) {
-  return ((const ContactList *)self)->count;
+static void list_adapter_destroy(void *self) {
+  list_destroy(self);
 }
 
-static Contact *list_at(void *self, size_t index) {
-  ContactList *list = self;
-
-  if (index >= list->count) {
-    return nullptr;
-  }
-
-  ListNode *node = list->head;
-
-  for (size_t step = 0; step < index; ++step) {
-    node = node->next;
-  }
-
-  return &node->contact;
+static bool list_adapter_add(void *self, const Contact *contact) {
+  return list_add(self, contact);
 }
 
-static bool list_remove_at(void *self, size_t index) {
-  ContactList *list = self;
-
-  if (index >= list->count) {
-    return false;
-  }
-
-  ListNode *node = list->head;
-
-  for (size_t step = 0; step < index; ++step) {
-    node = node->next;
-  }
-
-  if (node->previous != nullptr) {
-    node->previous->next = node->next;
-  } else {
-    list->head = node->next;
-  }
-
-  if (node->next != nullptr) {
-    node->next->previous = node->previous;
-  } else {
-    list->tail = node->previous;
-  }
-
-  contact_free(&node->contact);
-  free(node);
-  --list->count;
-  return true;
+static size_t list_adapter_count(const void *self) {
+  return list_count(self);
 }
 
-static int list_node_compare(const void *left, const void *right) {
-  const ListNode *left_node = *(const ListNode *const *)left;
-  const ListNode *right_node = *(const ListNode *const *)right;
-  return contact_compare(&left_node->contact, &right_node->contact);
+static Contact *list_adapter_at(void *self, const size_t index) {
+  return list_at(self, index);
 }
 
-static void list_reorder(void *self) {
-  ContactList *list = self;
-
-  if (list->count < 2) {
-    return;
-  }
-
-  ListNode **nodes = malloc(list->count * sizeof *nodes);
-
-  if (nodes == nullptr) {
-    return;
-  }
-
-  size_t index = 0;
-
-  for (ListNode *node = list->head; node != nullptr; node = node->next) {
-    nodes[index++] = node;
-  }
-
-  qsort(nodes, list->count, sizeof *nodes, list_node_compare);
-
-  for (index = 0; index < list->count; ++index) {
-    nodes[index]->previous = (index > 0) ? nodes[index - 1] : nullptr;
-    nodes[index]->next = (index + 1 < list->count) ? nodes[index + 1] : nullptr;
-  }
-
-  list->head = nodes[0];
-  list->tail = nodes[list->count - 1];
-  free(nodes);
+static bool list_adapter_remove_at(void *self, const size_t index) {
+  return list_remove_at(self, index);
 }
 
-static void list_dump(const void *self, ContactVisitor visitor, void *context) {
-  const ContactList *list = self;
-  size_t index = 0;
+static bool list_adapter_reorder_element(void *self, const size_t index) {
+  return list_reorder_element(self, index);
+}
 
-  for (const ListNode *node = list->head; node != nullptr; node = node->next) {
-    visitor(&node->contact, index, context);
-    ++index;
-  }
+static void list_adapter_visit(const void *element, const size_t index,
+                               void *context) {
+  ListAdapterDump *dump = context;
+  dump->visitor(element, index, dump->context);
+}
+
+static void list_adapter_dump(const void *self, const ContactVisitor visitor,
+                              void *context) {
+  ListAdapterDump dump = {.visitor = visitor, .context = context};
+  list_for_each(self, list_adapter_visit, &dump);
 }
 
 static const CollectionOperations LIST_OPERATIONS = {
-    .create = list_create,
-    .destroy = list_destroy,
-    .add = list_add,
-    .count = list_count,
-    .at = list_at,
-    .remove_at = list_remove_at,
-    .reorder = list_reorder,
-    .dump = list_dump,
+    .create = list_adapter_create,
+    .destroy = list_adapter_destroy,
+    .add = list_adapter_add,
+    .count = list_adapter_count,
+    .at = list_adapter_at,
+    .remove_at = list_adapter_remove_at,
+    .reorder_element = list_adapter_reorder_element,
+    .dump = list_adapter_dump,
     .dump_tree = nullptr,
 };
 

@@ -165,26 +165,33 @@ static const Command *parser_read_binary_operator(Parser *parser) {
   parser_skip_whitespace(parser);
 
   size_t count = 0;
-  const Command *all = command_all(&count);
+  const Command *const *all = command_all(&count);
+
+  if (all == nullptr) {
+    return nullptr;
+  }
+
   const Command *best = nullptr;
   size_t best_length = 0;
 
   for (size_t index = 0; index < count; ++index) {
-    if (all[index].kind != COMMAND_BINARY) {
+    const Command *candidate = all[index];
+
+    if (candidate->kind != COMMAND_BINARY) {
       continue;
     }
 
-    const size_t length = strlen(all[index].name);
+    const size_t length = strlen(candidate->name);
 
     if (length <= best_length) {
       continue;
     }
 
-    if (strncmp(parser->cursor, all[index].name, length) != 0) {
+    if (strncmp(parser->cursor, candidate->name, length) != 0) {
       continue;
     }
 
-    if (isalpha((unsigned char)all[index].name[0])) {
+    if (isalpha((unsigned char)candidate->name[0])) {
       const char next = parser->cursor[length];
 
       if (parser_is_identifier_char(next)) {
@@ -192,7 +199,7 @@ static const Command *parser_read_binary_operator(Parser *parser) {
       }
     }
 
-    best = &all[index];
+    best = candidate;
     best_length = length;
   }
 

@@ -8,7 +8,7 @@ static void print_usage(const char *program) {
   printf("Использование: %s [--collection array|list|tree]\n", program);
   puts("  --collection array   динамический массив (по умолчанию)");
   puts("  --collection list    двусвязный упорядоченный список");
-  puts("  --collection tree    бинарное дерево с периодической балансировкой");
+  puts("  --collection tree    бинарное дерево с автоматической балансировкой");
 }
 
 int main(int argc, char **argv) {

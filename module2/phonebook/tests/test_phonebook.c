@@ -73,8 +73,7 @@ static void run_reorder(const char *name) {
   free(stored->last_name);
   stored->last_name = duplicate_string("Zaharov");
 
-  phonebook_reorder(&phonebook);
-
+  TEST_ASSERT_TRUE(phonebook_reorder_element(&phonebook, 0));
   TEST_ASSERT_EQUAL_STRING("Zaharov", phonebook_at(&phonebook, 0)->last_name);
 
   phonebook_free(&phonebook);
@@ -127,8 +126,9 @@ static void test_hierarchical_flag() {
 static size_t maximum_prefix_length = 0;
 
 static void max_prefix_visitor(const Contact *contact, const char *prefix,
-                               void *context) {
+                               char marker, void *context) {
   (void)contact;
+  (void)marker;
   (void)context;
   const size_t length = strlen(prefix);
 
@@ -169,9 +169,10 @@ static void test_tree_remains_balanced() {
 static size_t tree_visit_count = 0;
 
 static void count_tree_visitor(const Contact *contact, const char *prefix,
-                               void *context) {
+                               char marker, void *context) {
   (void)contact;
   (void)prefix;
+  (void)marker;
   (void)context;
   ++tree_visit_count;
 }

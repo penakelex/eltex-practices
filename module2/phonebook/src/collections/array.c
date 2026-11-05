@@ -54,18 +54,24 @@ static bool array_remove_at(void *self, size_t index) {
   return vector_remove_at((Vector *)self, index);
 }
 
-static int array_qsort_compare(const void *left, const void *right) {
-  return contact_compare(left, right);
-}
-
-static void array_reorder(void *self) {
+static bool array_reorder_element(void *self, const size_t index) {
   Vector *vector = self;
 
-  if (vector->count < 2) {
-    return;
+  if (index >= vector->count) {
+    return false;
   }
 
-  qsort(vector->data, vector->count, vector->element_size, array_qsort_compare);
+  Contact moved = *(Contact *)vector_at(vector, index);
+  contact_initialize(vector_at(vector, index));
+  vector_remove_at(vector, index);
+
+  if (!array_add(self, &moved)) {
+    contact_free(&moved);
+    return false;
+  }
+
+  contact_initialize(&moved);
+  return true;
 }
 
 static void array_dump(const void *self, ContactVisitor visitor,
@@ -85,7 +91,7 @@ static const CollectionOperations ARRAY_OPERATIONS = {
     .count = array_count,
     .at = array_at,
     .remove_at = array_remove_at,
-    .reorder = array_reorder,
+    .reorder_element = array_reorder_element,
     .dump = array_dump,
     .dump_tree = nullptr,
 };

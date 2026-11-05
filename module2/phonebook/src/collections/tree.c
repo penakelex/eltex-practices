@@ -3,73 +3,99 @@
 #include <stdlib.h>
 #include <vector.h>
 
-enum : size_t { TREE_REBALANCE_THRESHOLD = 4 };
-
 enum : size_t { TREE_PREFIX_CAPACITY = 4096 };
 
 typedef struct TreeNode {
   Contact contact;
   struct TreeNode *left;
   struct TreeNode *right;
+  int height;
+  size_t size;
 } TreeNode;
 
 typedef struct {
   TreeNode *root;
-  size_t count;
-  size_t operations_since_rebalance;
 } Tree;
 
-static void free_contact_element(void *element) {
-  contact_free((Contact *)element);
+static int tree_node_height(const TreeNode *node) {
+  if (node == nullptr) {
+    return 0;
+  }
+
+  return node->height;
 }
 
-static void tree_collect_and_free(TreeNode *node, Vector *vector) {
+static size_t tree_node_size(const TreeNode *node) {
+  if (node == nullptr) {
+    return 0;
+  }
+
+  return node->size;
+}
+
+static void tree_update_node(TreeNode *node) {
   if (node == nullptr) {
     return;
   }
 
-  tree_collect_and_free(node->left, vector);
+  const int left_height = tree_node_height(node->left);
+  const int right_height = tree_node_height(node->right);
+  const int maximum_height =
+      left_height > right_height ? left_height : right_height;
 
-  if (!vector_push_back(vector, &node->contact)) {
-    contact_free(&node->contact);
-  }
+  node->height = 1 + maximum_height;
+  node->size = 1 + tree_node_size(node->left) + tree_node_size(node->right);
+}
 
+static TreeNode *tree_rotate_right(TreeNode *node) {
+  TreeNode *left = node->left;
+  TreeNode *middle = left->right;
+
+  left->right = node;
+  node->left = middle;
+
+  tree_update_node(node);
+  tree_update_node(left);
+  return left;
+}
+
+static TreeNode *tree_rotate_left(TreeNode *node) {
   TreeNode *right = node->right;
-  free(node);
-  tree_collect_and_free(right, vector);
+  TreeNode *middle = right->left;
+
+  right->left = node;
+  node->right = middle;
+
+  tree_update_node(node);
+  tree_update_node(right);
+  return right;
 }
 
-static TreeNode *tree_build_balanced(Vector *vector, const size_t left,
-                                     const size_t right) {
-  if (left >= right) {
-    return nullptr;
+static TreeNode *tree_balance_node(TreeNode *node) {
+  tree_update_node(node);
+
+  const int balance =
+      tree_node_height(node->left) - tree_node_height(node->right);
+
+  if (balance > 1) {
+    if (tree_node_height(node->left->left) <
+        tree_node_height(node->left->right)) {
+      node->left = tree_rotate_left(node->left);
+    }
+
+    return tree_rotate_right(node);
   }
 
-  const size_t middle = (left + right) / 2;
-  TreeNode *node = malloc(sizeof *node);
+  if (balance < -1) {
+    if (tree_node_height(node->right->right) <
+        tree_node_height(node->right->left)) {
+      node->right = tree_rotate_right(node->right);
+    }
 
-  if (node == nullptr) {
-    return nullptr;
+    return tree_rotate_left(node);
   }
 
-  node->contact = *(Contact *)vector_at(vector, middle);
-  node->left = tree_build_balanced(vector, left, middle);
-  node->right = tree_build_balanced(vector, middle + 1, right);
   return node;
-}
-
-static void tree_reorder(void *self) {
-  Tree *tree = self;
-  Vector vector;
-  vector_initialize(&vector, sizeof(Contact), free_contact_element);
-  tree_collect_and_free(tree->root, &vector);
-
-  tree->root = tree_build_balanced(&vector, 0, vector.count);
-  tree->count = vector.count;
-  tree->operations_since_rebalance = 0;
-
-  vector.element_destructor = nullptr;
-  vector_free(&vector);
 }
 
 static void tree_free_nodes(TreeNode *node) {
@@ -111,19 +137,37 @@ static TreeNode *tree_insert_node(TreeNode *node, const Contact *contact,
     created->contact = *contact;
     created->left = nullptr;
     created->right = nullptr;
+    created->height = 1;
+    created->size = 1;
     return created;
   }
 
-  if (contact_compare(&node->contact, contact) <= 0) {
-    node->right = tree_insert_node(node->right, contact, success);
+  if (contact_compare(contact, &node->contact) < 0) {
+    TreeNode *new_left = tree_insert_node(node->left, contact, success);
+
+    if (!*success) {
+      return node;
+    }
+
+    node->left = new_left;
   } else {
-    node->left = tree_insert_node(node->left, contact, success);
+    TreeNode *new_right = tree_insert_node(node->right, contact, success);
+
+    if (!*success) {
+      return node;
+    }
+
+    node->right = new_right;
   }
 
-  return node;
+  return tree_balance_node(node);
 }
 
 static bool tree_add(void *self, const Contact *contact) {
+  if (self == nullptr || contact == nullptr) {
+    return false;
+  }
+
   Tree *tree = self;
   bool success = true;
   TreeNode *new_root = tree_insert_node(tree->root, contact, &success);
@@ -133,71 +177,152 @@ static bool tree_add(void *self, const Contact *contact) {
   }
 
   tree->root = new_root;
-  ++tree->count;
-  ++tree->operations_since_rebalance;
-
-  if (tree->operations_since_rebalance >= TREE_REBALANCE_THRESHOLD) {
-    tree_reorder(tree);
-  }
-
   return true;
 }
 
 static size_t tree_count(const void *self) {
-  return ((const Tree *)self)->count;
+  if (self == nullptr) {
+    return 0;
+  }
+
+  return tree_node_size(((const Tree *)self)->root);
 }
 
-static Contact *tree_at_impl(TreeNode *node, const size_t index,
-                             size_t *visited) {
+static Contact *tree_at_impl(TreeNode *node, const size_t index) {
   if (node == nullptr) {
     return nullptr;
   }
 
-  Contact *left_result = tree_at_impl(node->left, index, visited);
+  const size_t left_size = tree_node_size(node->left);
 
-  if (left_result != nullptr) {
-    return left_result;
+  if (index < left_size) {
+    return tree_at_impl(node->left, index);
   }
 
-  if (*visited == index) {
+  if (index == left_size) {
     return &node->contact;
   }
 
-  ++(*visited);
-  return tree_at_impl(node->right, index, visited);
+  return tree_at_impl(node->right, index - left_size - 1);
 }
 
 static Contact *tree_at(void *self, const size_t index) {
-  Tree *tree = self;
-
-  if (index >= tree->count) {
+  if (self == nullptr) {
     return nullptr;
   }
 
-  size_t visited = 0;
-  return tree_at_impl(tree->root, index, &visited);
+  Tree *tree = self;
+
+  if (index >= tree_node_size(tree->root)) {
+    return nullptr;
+  }
+
+  return tree_at_impl(tree->root, index);
+}
+
+static TreeNode *tree_remove_minimum_node(TreeNode *node,
+                                          Contact *out_contact) {
+  if (node->left == nullptr) {
+    *out_contact = node->contact;
+    TreeNode *right = node->right;
+    free(node);
+    return right;
+  }
+
+  node->left = tree_remove_minimum_node(node->left, out_contact);
+  return tree_balance_node(node);
+}
+
+static TreeNode *tree_remove_node(TreeNode *node, const size_t index,
+                                  bool *success) {
+  if (node == nullptr) {
+    *success = false;
+    return nullptr;
+  }
+
+  const size_t left_size = tree_node_size(node->left);
+
+  if (index < left_size) {
+    TreeNode *new_left = tree_remove_node(node->left, index, success);
+
+    if (!*success) {
+      return node;
+    }
+
+    node->left = new_left;
+  } else if (index > left_size) {
+    TreeNode *new_right =
+        tree_remove_node(node->right, index - left_size - 1, success);
+
+    if (!*success) {
+      return node;
+    }
+
+    node->right = new_right;
+  } else {
+    if (node->left == nullptr || node->right == nullptr) {
+      TreeNode *child = node->left != nullptr ? node->left : node->right;
+      contact_free(&node->contact);
+      free(node);
+      *success = true;
+      return child;
+    }
+
+    Contact moved_contact;
+    node->right = tree_remove_minimum_node(node->right, &moved_contact);
+    contact_free(&node->contact);
+    node->contact = moved_contact;
+    *success = true;
+  }
+
+  return tree_balance_node(node);
 }
 
 static bool tree_remove_at(void *self, const size_t index) {
-  Tree *tree = self;
-
-  if (index >= tree->count) {
+  if (self == nullptr) {
     return false;
   }
 
-  Vector vector;
-  vector_initialize(&vector, sizeof(Contact), free_contact_element);
-  tree_collect_and_free(tree->root, &vector);
-  tree->root = nullptr;
-  tree->count = 0;
+  Tree *tree = self;
 
-  vector_remove_at(&vector, index);
-  tree->root = tree_build_balanced(&vector, 0, vector.count);
-  tree->count = vector.count;
-  tree->operations_since_rebalance = 0;
+  if (index >= tree_node_size(tree->root)) {
+    return false;
+  }
 
-  vector.element_destructor = nullptr;
-  vector_free(&vector);
+  bool success = true;
+  tree->root = tree_remove_node(tree->root, index, &success);
+  return success;
+}
+
+static bool tree_reorder_element(void *self, const size_t index) {
+  if (self == nullptr) {
+    return false;
+  }
+
+  Tree *tree = self;
+
+  if (index >= tree_node_size(tree->root)) {
+    return false;
+  }
+
+  Contact *slot = tree_at_impl(tree->root, index);
+  Contact moved = *slot;
+  contact_initialize(slot);
+
+  bool success = true;
+  tree->root = tree_remove_node(tree->root, index, &success);
+
+  if (!success) {
+    contact_free(&moved);
+    return false;
+  }
+
+  if (!tree_add(self, &moved)) {
+    contact_free(&moved);
+    return false;
+  }
+
+  contact_initialize(&moved);
   return true;
 }
 
@@ -214,6 +339,10 @@ static void tree_dump_impl(const TreeNode *node, ContactVisitor visitor,
 }
 
 static void tree_dump(const void *self, ContactVisitor visitor, void *context) {
+  if (self == nullptr) {
+    return;
+  }
+
   const Tree *tree = self;
   size_t index = 0;
   tree_dump_impl(tree->root, visitor, context, &index);
@@ -221,13 +350,14 @@ static void tree_dump(const void *self, ContactVisitor visitor, void *context) {
 
 static void tree_dump_tree_impl(const TreeNode *node, const char *prefix,
                                 const bool is_root, const bool is_last_child,
-                                TreeVisitor visitor, void *context) {
+                                const char marker, TreeVisitor visitor,
+                                void *context) {
   if (node == nullptr) {
     return;
   }
 
   if (is_root) {
-    visitor(&node->contact, "", context);
+    visitor(&node->contact, "", marker, context);
   } else {
     char line_prefix[TREE_PREFIX_CAPACITY];
     int written = snprintf(line_prefix, sizeof line_prefix, "%s%s", prefix,
@@ -237,7 +367,7 @@ static void tree_dump_tree_impl(const TreeNode *node, const char *prefix,
       return;
     }
 
-    visitor(&node->contact, line_prefix, context);
+    visitor(&node->contact, line_prefix, marker, context);
   }
 
   const bool has_left = node->left != nullptr;
@@ -261,20 +391,24 @@ static void tree_dump_tree_impl(const TreeNode *node, const char *prefix,
   }
 
   if (has_left) {
-    tree_dump_tree_impl(node->left, child_prefix, false, !has_right, visitor,
-                        context);
+    tree_dump_tree_impl(node->left, child_prefix, false, !has_right, 'L',
+                        visitor, context);
   }
 
   if (has_right) {
-    tree_dump_tree_impl(node->right, child_prefix, false, true, visitor,
+    tree_dump_tree_impl(node->right, child_prefix, false, true, 'R', visitor,
                         context);
   }
 }
 
 static void tree_dump_tree(const void *self, TreeVisitor visitor,
                            void *context) {
+  if (self == nullptr) {
+    return;
+  }
+
   const Tree *tree = self;
-  tree_dump_tree_impl(tree->root, "", true, true, visitor, context);
+  tree_dump_tree_impl(tree->root, "", true, true, 'M', visitor, context);
 }
 
 static const CollectionOperations TREE_OPERATIONS = {
@@ -284,7 +418,7 @@ static const CollectionOperations TREE_OPERATIONS = {
     .count = tree_count,
     .at = tree_at,
     .remove_at = tree_remove_at,
-    .reorder = tree_reorder,
+    .reorder_element = tree_reorder_element,
     .dump = tree_dump,
     .dump_tree = tree_dump_tree,
 };

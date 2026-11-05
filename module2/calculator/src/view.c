@@ -4,38 +4,43 @@
 #include <view.h>
 
 void view_print_welcome() {
-  puts("Калькулятор выражений. Введите '?' для справки, 'q' для выхода.");
+  puts("Калькулятор выражений. Введите '?' для справки, "
+       "'reload' для перезагрузки плагинов, 'q' для выхода.");
 }
 
 void view_print_help() {
   puts("Доступные команды:");
 
   size_t count = 0;
-  const Command *all = command_all(&count);
+  const Command *const *all = command_all(&count);
 
-  for (size_t index = 0; index < count; ++index) {
-    const char *kind = "";
+  if (all != nullptr) {
+    for (size_t index = 0; index < count; ++index) {
+      const Command *command = all[index];
+      const char *kind = "";
 
-    switch (all[index].kind) {
-    case COMMAND_CONSTANT: {
-      kind = "константа";
-      break;
-    }
-    case COMMAND_UNARY: {
-      kind = "функция";
-      break;
-    }
-    case COMMAND_BINARY: {
-      kind = "операция";
-      break;
-    }
-    }
+      switch (command->kind) {
+      case COMMAND_CONSTANT: {
+        kind = "константа";
+        break;
+      }
+      case COMMAND_UNARY: {
+        kind = "функция";
+        break;
+      }
+      case COMMAND_BINARY: {
+        kind = "операция";
+        break;
+      }
+      }
 
-    printf("  %-8s %s\n", all[index].name, kind);
+      printf("  %-8s %s\n", command->name, kind);
+    }
   }
 
   puts("");
   puts("Пример: 2 + 3 * sin(pi / 2)");
+  puts("'reload' — перезагрузить плагины из каталога");
   puts("'q' — выход");
 }
 

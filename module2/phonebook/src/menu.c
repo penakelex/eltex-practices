@@ -166,7 +166,7 @@ static void edit_contact(Phonebook *phonebook) {
 
       if (field_mask &
           (FIELD_LAST_NAME | FIELD_FIRST_NAME | FIELD_MIDDLE_NAME)) {
-        phonebook_reorder(phonebook);
+        phonebook_reorder_element(phonebook, (size_t)(number - 1));
       }
 
       puts("Изменения применены.");

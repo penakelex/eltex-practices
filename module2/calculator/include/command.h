@@ -20,6 +20,7 @@ typedef struct {
   } operation;
 } Command;
 
+bool command_register(const Command *command);
+void command_reset(void);
 const Command *command_find(const char *name);
-const Command *command_all(size_t *count);
-void command_print_help();
+const Command *const *command_all(size_t *count);

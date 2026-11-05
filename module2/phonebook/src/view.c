@@ -49,10 +49,11 @@ static void view_print_visitor(const Contact *contact, const size_t index,
 }
 
 static void view_print_tree_visitor(const Contact *contact, const char *prefix,
-                                    void *context) {
+                                    const char marker, void *context) {
   PhonebookPrintState *state = context;
   state->printed_any = true;
-  printf("%s%s %s\n", prefix, contact->last_name, contact->first_name);
+  printf("%s%s %s [%c]\n", prefix, contact->last_name, contact->first_name,
+         marker);
 }
 
 bool view_print_phonebook(Phonebook *phonebook) {

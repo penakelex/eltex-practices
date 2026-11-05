@@ -1,85 +1,64 @@
 #include <command.h>
-#include <math.h>
 #include <stddef.h>
-#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-#ifndef M_PI
-constexpr double M_PI = 3.14159265358979323846;
-#endif
+static const Command **commands = nullptr;
+static size_t commands_capacity = 0;
+static size_t commands_count = 0;
 
-#ifndef M_E
-constexpr double M_E = 2.71828182845904523536;
-#endif
-
-static double command_add(double left, double right) {
-  return left + right;
-}
-
-static double command_subtract(double left, double right) {
-  return left - right;
-}
-
-static double command_multiply(double left, double right) {
-  return left * right;
-}
-
-static double command_divide(double left, double right) {
-  if (right == 0.0) {
-    return NAN;
+bool command_register(const Command *command) {
+  if (command == nullptr || command->name == nullptr) {
+    return false;
   }
 
-  return left / right;
+  if (commands_count == commands_capacity) {
+    const size_t new_capacity =
+        (commands_capacity == 0) ? 32 : commands_capacity * 2;
+    const Command **resized = (const Command **)realloc(
+        (void *)commands, new_capacity * sizeof *resized);
+
+    if (resized == nullptr) {
+      return false;
+    }
+
+    commands = resized;
+    commands_capacity = new_capacity;
+  }
+
+  commands[commands_count++] = command;
+  return true;
 }
 
-static double command_power(double left, double right) {
-  return pow(left, right);
+void command_reset(void) {
+  free((void *)commands);
+  commands = nullptr;
+  commands_capacity = 0;
+  commands_count = 0;
 }
-
-static double command_negate(double value) {
-  return -value;
-}
-
-static const Command COMMANDS[] = {
-    {"pi", COMMAND_CONSTANT, 0, false, {.constant = M_PI}},
-    {"e", COMMAND_CONSTANT, 0, false, {.constant = M_E}},
-
-    {"+", COMMAND_BINARY, 1, false, {.binary = command_add}},
-    {"-", COMMAND_BINARY, 1, false, {.binary = command_subtract}},
-    {"*", COMMAND_BINARY, 2, false, {.binary = command_multiply}},
-    {"/", COMMAND_BINARY, 2, false, {.binary = command_divide}},
-    {"^", COMMAND_BINARY, 3, true, {.binary = command_power}},
-
-    {"neg", COMMAND_UNARY, 4, true, {.unary = command_negate}},
-    {"sqrt", COMMAND_UNARY, 4, true, {.unary = sqrt}},
-    {"sin", COMMAND_UNARY, 4, true, {.unary = sin}},
-    {"cos", COMMAND_UNARY, 4, true, {.unary = cos}},
-    {"tan", COMMAND_UNARY, 4, true, {.unary = tan}},
-    {"asin", COMMAND_UNARY, 4, true, {.unary = asin}},
-    {"acos", COMMAND_UNARY, 4, true, {.unary = acos}},
-    {"atan", COMMAND_UNARY, 4, true, {.unary = atan}},
-    {"ln", COMMAND_UNARY, 4, true, {.unary = log}},
-    {"log", COMMAND_UNARY, 4, true, {.unary = log10}},
-    {"exp", COMMAND_UNARY, 4, true, {.unary = exp}},
-    {"abs", COMMAND_UNARY, 4, true, {.unary = fabs}},
-};
-
-constexpr size_t COMMAND_COUNT = sizeof(COMMANDS) / sizeof(COMMANDS[0]);
 
 const Command *command_find(const char *name) {
-  for (size_t index = 0; index < COMMAND_COUNT; ++index) {
-    if (strcmp(COMMANDS[index].name, name) == 0) {
-      return &COMMANDS[index];
+  if (name == nullptr) {
+    return nullptr;
+  }
+
+  for (size_t index = 0; index < commands_count; ++index) {
+    if (strcmp(commands[index]->name, name) == 0) {
+      return commands[index];
     }
   }
 
   return nullptr;
 }
 
-const Command *command_all(size_t *count) {
+const Command *const *command_all(size_t *count) {
   if (count != nullptr) {
-    *count = COMMAND_COUNT;
+    *count = commands_count;
   }
 
-  return COMMANDS;
+  if (commands_count == 0) {
+    return nullptr;
+  }
+
+  return commands;
 }

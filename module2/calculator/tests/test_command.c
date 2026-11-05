@@ -1,6 +1,5 @@
 #include "unity.h"
 #include <command.h>
-#include <math.h>
 #include <string.h>
 
 constexpr double TEST_PI = 3.14159265358979323846;
@@ -68,7 +67,7 @@ static void test_find_unknown() {
 
 static void test_all_returns_something() {
   size_t count = 0;
-  const Command *all = command_all(&count);
+  const Command *const *all = command_all(&count);
 
   TEST_ASSERT_NOT_NULL(all);
   TEST_ASSERT_GREATER_THAN(0, (int)count);
@@ -78,15 +77,17 @@ static void test_all_returns_something() {
   bool saw_sqrt = false;
 
   for (size_t index = 0; index < count; ++index) {
-    if (strcmp(all[index].name, "pi") == 0) {
+    const Command *command = all[index];
+
+    if (strcmp(command->name, "pi") == 0) {
       saw_pi = true;
     }
 
-    if (strcmp(all[index].name, "+") == 0) {
+    if (strcmp(command->name, "+") == 0) {
       saw_add = true;
     }
 
-    if (strcmp(all[index].name, "sqrt") == 0) {
+    if (strcmp(command->name, "sqrt") == 0) {
       saw_sqrt = true;
     }
   }

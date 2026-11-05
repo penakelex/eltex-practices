@@ -7,7 +7,7 @@ typedef void (*ContactVisitor)(const Contact *contact, size_t index,
                                void *context);
 
 typedef void (*TreeVisitor)(const Contact *contact, const char *prefix,
-                            void *context);
+                            char marker, void *context);
 
 typedef struct {
   void *(*create)(void);
@@ -16,7 +16,7 @@ typedef struct {
   size_t (*count)(const void *self);
   Contact *(*at)(void *self, size_t index);
   bool (*remove_at)(void *self, size_t index);
-  void (*reorder)(void *self);
+  bool (*reorder_element)(void *self, size_t index);
   void (*dump)(const void *self, ContactVisitor visitor, void *context);
   void (*dump_tree)(const void *self, TreeVisitor visitor, void *context);
 } CollectionOperations;

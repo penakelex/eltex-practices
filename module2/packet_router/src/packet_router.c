@@ -112,8 +112,6 @@ PacketRouterStatus packet_router_run(const char *gateway_str,
     return PACKET_ROUTER_INVALID_MASK;
   }
 
-  // packet_stats_initialize(stats);
-
   for (uint32_t i = 0; i < packet_count; i++) {
     const uint32_t ip = generate_random_uint32();
 

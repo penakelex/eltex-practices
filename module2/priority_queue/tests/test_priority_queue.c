@@ -108,17 +108,26 @@ static void test_extract_with_priority_at_least() {
   add_message(&queue, 4, 40);
 
   Message output;
+
+  TEST_ASSERT_TRUE(
+      priority_queue_extract_with_priority_at_least(&queue, 25, &output));
+  TEST_ASSERT_EQUAL_UINT(30, output.priority);
+
+  TEST_ASSERT_TRUE(
+      priority_queue_extract_with_priority_at_least(&queue, 25, &output));
+  TEST_ASSERT_EQUAL_UINT(20, output.priority);
+
   TEST_ASSERT_TRUE(
       priority_queue_extract_with_priority_at_least(&queue, 25, &output));
   TEST_ASSERT_EQUAL_UINT(40, output.priority);
 
   TEST_ASSERT_TRUE(
       priority_queue_extract_with_priority_at_least(&queue, 25, &output));
-  TEST_ASSERT_EQUAL_UINT(30, output.priority);
+  TEST_ASSERT_EQUAL_UINT(10, output.priority);
 
   TEST_ASSERT_FALSE(
       priority_queue_extract_with_priority_at_least(&queue, 25, &output));
-  TEST_ASSERT_EQUAL_INT(2, (int)priority_queue_count(&queue));
+  TEST_ASSERT_EQUAL_INT(0, (int)priority_queue_count(&queue));
 }
 
 static void test_extract_with_priority_at_least_includes_threshold() {
@@ -130,13 +139,18 @@ static void test_extract_with_priority_at_least_includes_threshold() {
   add_message(&queue, 3, 25);
 
   Message output;
-  TEST_ASSERT_TRUE(
-      priority_queue_extract_with_priority_at_least(&queue, 50, &output));
-  TEST_ASSERT_EQUAL_UINT(100, output.priority);
 
   TEST_ASSERT_TRUE(
       priority_queue_extract_with_priority_at_least(&queue, 50, &output));
   TEST_ASSERT_EQUAL_UINT(50, output.priority);
+
+  TEST_ASSERT_TRUE(
+      priority_queue_extract_with_priority_at_least(&queue, 50, &output));
+  TEST_ASSERT_EQUAL_UINT(25, output.priority);
+
+  TEST_ASSERT_TRUE(
+      priority_queue_extract_with_priority_at_least(&queue, 50, &output));
+  TEST_ASSERT_EQUAL_UINT(100, output.priority);
 
   TEST_ASSERT_FALSE(
       priority_queue_extract_with_priority_at_least(&queue, 50, &output));

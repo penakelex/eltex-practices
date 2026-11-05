@@ -56,18 +56,39 @@ bool priority_queue_extract_with_priority(PriorityQueue *queue,
 bool priority_queue_extract_with_priority_at_least(PriorityQueue *queue,
                                                    unsigned int threshold,
                                                    Message *out) {
-  if (threshold >= PRIORITY_LEVELS) {
+  if (queue == nullptr || out == nullptr || threshold >= PRIORITY_LEVELS) {
     return false;
   }
 
-  for (size_t index = PRIORITY_LEVELS; index > threshold; --index) {
-    if (circular_buffer_pop(&queue->levels[index - 1], out)) {
-      --queue->total;
-      return true;
+  size_t best_priority = PRIORITY_LEVELS;
+  size_t best_distance = PRIORITY_LEVELS;
+
+  for (size_t priority = PRIORITY_LEVELS; priority > 0; --priority) {
+    const size_t level = priority - 1;
+
+    if (circular_buffer_is_empty(&queue->levels[level])) {
+      continue;
+    }
+
+    const size_t distance =
+        (level > threshold) ? (level - threshold) : (threshold - level);
+
+    if (distance < best_distance) {
+      best_distance = distance;
+      best_priority = level;
     }
   }
 
-  return false;
+  if (best_priority == PRIORITY_LEVELS) {
+    return false;
+  }
+
+  if (!circular_buffer_pop(&queue->levels[best_priority], out)) {
+    return false;
+  }
+
+  --queue->total;
+  return true;
 }
 
 bool priority_queue_is_empty(const PriorityQueue *queue) {

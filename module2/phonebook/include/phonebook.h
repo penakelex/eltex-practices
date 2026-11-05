@@ -16,7 +16,7 @@ bool phonebook_add(Phonebook *phonebook, Contact *contact);
 size_t phonebook_count(const Phonebook *phonebook);
 Contact *phonebook_at(Phonebook *phonebook, size_t index);
 bool phonebook_remove(Phonebook *phonebook, size_t index);
-void phonebook_reorder(Phonebook *phonebook);
+bool phonebook_reorder_element(Phonebook *phonebook, size_t index);
 void phonebook_dump(Phonebook *phonebook, ContactVisitor visitor,
                     void *context);
 void phonebook_dump_tree(Phonebook *phonebook, TreeVisitor visitor,
