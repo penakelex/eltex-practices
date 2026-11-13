@@ -1,5 +1,5 @@
 ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-MODULES := module2
+MODULES := module2 module3
 
 .PHONY: all clean test format format-check install-hooks run $(MODULES)
 .PHONY: run-calculator run-phonebook run-phonebook-static \

@@ -1,0 +1,17 @@
+ROOT := $(abspath ../..)
+BUILD_DIR := build
+CPPFLAGS := -Iinclude
+
+SOURCES := $(wildcard src/*.c) $(wildcard src/file_copy/*.c)
+TEST_SOURCES := $(wildcard tests/*.c) \
+                $(filter-out src/main.c,$(SOURCES))
+
+TARGET := $(BUILD_DIR)/bin/file_copy
+TEST_TARGET := $(BUILD_DIR)/test/bin/test_file_copy
+
+include $(ROOT)/mk/common.mk
+include $(ROOT)/mk/app.mk
+
+.PHONY: test-integration
+test-integration: $(TARGET)
+	bash ./tests/run_integration.sh $(abspath $(TARGET))
