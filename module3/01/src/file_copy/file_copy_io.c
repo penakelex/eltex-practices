@@ -7,7 +7,7 @@
 #include <string.h>
 #include <unistd.h>
 
-bool file_copy_read_full(int fd, void *buffer, size_t size) {
+bool file_copy_read_full(const int fd, void *buffer, size_t size) {
   auto bytes = (char *)buffer;
   size_t received = 0;
 
@@ -32,7 +32,7 @@ bool file_copy_read_full(int fd, void *buffer, size_t size) {
   return true;
 }
 
-bool file_copy_write_full(int fd, const void *buffer, size_t size) {
+bool file_copy_write_full(const int fd, const void *buffer, size_t size) {
   auto bytes = (const char *)buffer;
   size_t written = 0;
 
@@ -53,7 +53,7 @@ bool file_copy_write_full(int fd, const void *buffer, size_t size) {
   return true;
 }
 
-bool file_copy_write_header(int fd, const char *name, uint64_t size) {
+bool file_copy_write_header(const int fd, const char *name, uint64_t size) {
   uint32_t name_length = 0;
 
   if (name != nullptr && name[0] != '\0') {
@@ -75,7 +75,7 @@ bool file_copy_write_header(int fd, const char *name, uint64_t size) {
   return file_copy_write_full(fd, &size, sizeof(size));
 }
 
-bool file_copy_read_header(int fd, char *name_out, size_t name_capacity,
+bool file_copy_read_header(const int fd, char *name_out, size_t name_capacity,
                            uint32_t *name_length_out, uint64_t *size_out) {
   uint32_t name_length = 0;
 

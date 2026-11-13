@@ -15,7 +15,7 @@ typedef struct {
 
 bool file_copy_run(const FileCopyOptions *options);
 
-bool file_copy_write_header(int fd, const char *name, uint64_t size);
+bool file_copy_write_header(const int fd, const char *name, uint64_t size);
 
-bool file_copy_read_header(int fd, char *name_out, size_t name_capacity,
+bool file_copy_read_header(const int fd, char *name_out, size_t name_capacity,
                            uint32_t *name_length_out, uint64_t *size_out);

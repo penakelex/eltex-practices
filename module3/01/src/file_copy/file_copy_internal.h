@@ -25,9 +25,9 @@ bool file_copy_channel_initialize_unnamed(FileCopyChannel *self);
 bool file_copy_channel_initialize_named(FileCopyChannel *self,
                                         const char *fifo_base_name);
 
-bool file_copy_read_full(int fd, void *buffer, size_t size);
+bool file_copy_read_full(const int fd, void *buffer, size_t size);
 
-bool file_copy_write_full(int fd, const void *buffer, size_t size);
+bool file_copy_write_full(const int fd, const void *buffer, size_t size);
 
 bool file_copy_child_run(FileCopyChannel *channel);
 

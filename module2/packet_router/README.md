@@ -36,13 +36,13 @@
 
 ### Статусы
 
-| Статус                             | Причина                                      |
-|------------------------------------|----------------------------------------------|
-| `PACKET_ROUTER_OK`                 | успешная обработка                           |
-| `PACKET_ROUTER_INVALID_GATEWAY`    | не удалось разобрать IP шлюза                |
-| `PACKET_ROUTER_INVALID_MASK`       | не удалось разобрать маску подсети           |
-| `PACKET_ROUTER_INVALID_PACKET_COUNT` | `N` равно нулю или выходит за `uint32_t`    |
-| `PACKET_ROUTER_INVALID_ARGUMENTS`  | передан `nullptr` в обязательный параметр    |
+| Статус | Причина |
+| ------------------------------------ | ---------------------------------------------- |
+| `PACKET_ROUTER_OK` | успешная обработка |
+| `PACKET_ROUTER_INVALID_GATEWAY` | не удалось разобрать IP шлюза |
+| `PACKET_ROUTER_INVALID_MASK` | не удалось разобрать маску подсети |
+| `PACKET_ROUTER_INVALID_PACKET_COUNT` | `N` равно нулю или выходит за `uint32_t` |
+| `PACKET_ROUTER_INVALID_ARGUMENTS` | передан `nullptr` в обязательный параметр |
 
 ## Использование
 
