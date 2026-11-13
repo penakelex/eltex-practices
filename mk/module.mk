@@ -22,3 +22,5 @@ clean:
 
 run-%:
 	$(MAKE) -C $* run ARGS="$(ARGS)"
+
+include $(dir $(lastword $(MAKEFILE_LIST)))format.mk

@@ -18,19 +18,7 @@ test:
 clean:
 	@for m in $(MODULES); do $(MAKE) -C $$m clean || exit 1; done
 
-format:
-	find . -type f \( -name '*.c' -o -name '*.h' \) \
-	  -not -path './.git/*' \
-	  -not -path '*/build/*' \
-	  -not -path './third_party/*' -print0 \
-	  | xargs -0 clang-format -i
-
-format-check:
-	find . -type f \( -name '*.c' -o -name '*.h' \) \
-	  -not -path './.git/*' \
-	  -not -path '*/build/*' \
-	  -not -path './third_party/*' -print0 \
-	  | xargs -0 clang-format --dry-run --Werror
+include $(dir $(lastword $(MAKEFILE_LIST)))mk/format.mk
 
 install-hooks:
 	chmod +x scripts/pre-commit scripts/pre-push

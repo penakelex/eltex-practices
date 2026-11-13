@@ -22,3 +22,5 @@ $(UNITY_SRC):
 $(UNITY_OBJ): $(UNITY_SRC)
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(UNITY_INC) -c $< -o $@
+
+include $(dir $(lastword $(MAKEFILE_LIST)))format.mk
