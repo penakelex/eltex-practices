@@ -2,6 +2,6 @@
 set -e
 
 echo ">>> Запуск тестов перед пушем..."
-make -C module2 test
+make test
 
 echo ">>> Тесты пройдены."

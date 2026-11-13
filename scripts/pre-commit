@@ -2,7 +2,7 @@
 set -e
 
 echo ">>> Форматирование кода..."
-make -C module2 format
+make format
 
 echo ">>> Проверка, что форматирование не оставило изменений..."
 if ! git diff --quiet; then
@@ -12,6 +12,6 @@ if ! git diff --quiet; then
 fi
 
 echo ">>> Запуск тестов..."
-make -C module2 test
+make test
 
 echo ">>> Все проверки пройдены."

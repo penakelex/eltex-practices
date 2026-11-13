@@ -11,13 +11,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Установка clang-format
+      - name: Установка clang и clang-format
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang-format
+          sudo apt-get install -y clang clang-format
+
+      - name: Версии инструментов
+        run: |
+          clang --version
+          clang-format --version
 
       - name: Проверка форматирования
-        run: make -C module2 format-check
+        run: make format-check
 
       - name: Запуск тестов
-        run: make -C module2 test
+        run: make test
