@@ -7,7 +7,7 @@
 #include <string.h>
 #include <unistd.h>
 
-bool file_copy_read_full(const int fd, void *buffer, size_t size) {
+bool file_copy_read_full(const int fd, void *buffer, const size_t size) {
   auto bytes = (char *)buffer;
   size_t received = 0;
 
@@ -32,7 +32,7 @@ bool file_copy_read_full(const int fd, void *buffer, size_t size) {
   return true;
 }
 
-bool file_copy_write_full(const int fd, const void *buffer, size_t size) {
+bool file_copy_write_full(const int fd, const void *buffer, const size_t size) {
   auto bytes = (const char *)buffer;
   size_t written = 0;
 
