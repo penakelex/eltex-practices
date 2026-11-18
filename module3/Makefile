@@ -1,7 +1,7 @@
 ROOT := $(abspath ..)
 
-LIBS :=
-APPS := 01 02 03 04
+LIBS := 04-05
+APPS := 01 02 03 04 05
 BUILT := $(LIBS) $(APPS)
 
 include $(ROOT)/mk/module.mk

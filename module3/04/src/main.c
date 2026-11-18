@@ -1,5 +1,6 @@
 #define _POSIX_C_SOURCE 202405L
 
+#include "ipc_system_v.h"
 #include "consumer.h"
 #include "producer.h"
 #include "view.h"
@@ -77,8 +78,8 @@ int main(int argc, char *argv[]) {
       return EXIT_FAILURE;
     }
 
-    if (!producer_run(key_path, (size_t)capacity, (unsigned int)produce_delay,
-                      (unsigned int)poll_delay)) {
+    if (!producer_run(ipc_system_v_ops(), key_path, (size_t)capacity,
+                      (unsigned int)produce_delay, (unsigned int)poll_delay)) {
       return EXIT_FAILURE;
     }
 
@@ -93,7 +94,7 @@ int main(int argc, char *argv[]) {
       return EXIT_FAILURE;
     }
 
-    if (!consumer_run(key_path, (unsigned int)poll_delay)) {
+    if (!consumer_run(ipc_system_v_ops(), key_path, (unsigned int)poll_delay)) {
       return EXIT_FAILURE;
     }
 

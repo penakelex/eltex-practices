@@ -3,13 +3,9 @@
 #include "consumer.h"
 
 #include "block_list.h"
-#include "semaphore.h"
-#include "shared_memory.h"
 #include "view.h"
 
 #include <unistd.h>
-
-constexpr int SEMAPHORE_PROJECT_ID = 'S';
 
 static void scan_block(const void *data, const uint32_t offset,
                        int32_t *minimum, int32_t *maximum, uint32_t *count) {
@@ -31,29 +27,33 @@ static void scan_block(const void *data, const uint32_t offset,
   }
 }
 
-bool consumer_run(const char *key_path, const unsigned int poll_delay) {
-  SharedMemory memory;
+bool consumer_run(const IpcOps *ipc_ops, const char *base_name,
+                  const unsigned int poll_delay) {
+  if (ipc_ops == nullptr || base_name == nullptr) {
+    return false;
+  }
 
-  if (!shared_memory_open(&memory, key_path, 0)) {
+  Ipc ipc;
+  ipc_initialize(&ipc, ipc_ops);
+
+  if (!ipc_memory_open(&ipc, base_name)) {
     view_shared_memory_unavailable();
     return false;
   }
 
-  Semaphore semaphore;
-
-  if (!semaphore_open(&semaphore, key_path, SEMAPHORE_PROJECT_ID)) {
+  if (!ipc_semaphore_open(&ipc, base_name)) {
     view_error("cannot open semaphore");
-    shared_memory_close(&memory);
+    ipc_memory_close(&ipc);
     return false;
   }
 
   view_consumer_started();
 
   for (;;) {
-    void *data = shared_memory_data(&memory);
-    const size_t capacity = shared_memory_data_capacity(&memory);
+    void *data = ipc_memory_data(&ipc);
+    const size_t capacity = ipc_memory_data_capacity(&ipc);
 
-    if (!semaphore_wait(&semaphore)) {
+    if (!ipc_semaphore_wait(&ipc)) {
       break;
     }
 
@@ -69,11 +69,10 @@ bool consumer_run(const char *key_path, const unsigned int poll_delay) {
       block_list_mark_processed(data, offset);
     }
 
-    const bool finished = !found &&
-                          shared_memory_is_producer_finished(&memory) &&
+    const bool finished = !found && ipc_memory_is_producer_finished(&ipc) &&
                           block_list_all_processed(data, capacity);
 
-    semaphore_post(&semaphore);
+    ipc_semaphore_post(&ipc);
 
     if (found) {
       view_consumer_processed(offset, minimum, maximum, count);
@@ -90,6 +89,7 @@ bool consumer_run(const char *key_path, const unsigned int poll_delay) {
 
   view_consumer_finished();
 
-  shared_memory_close(&memory);
+  ipc_semaphore_close(&ipc);
+  ipc_memory_close(&ipc);
   return true;
 }

@@ -1,7 +1,6 @@
 #define _POSIX_C_SOURCE 202405L
 
-#include "semaphore.h"
-#include "shared_memory.h"
+#include "ipc_system_v.h"
 
 #include <fcntl.h>
 #include <stdio.h>
@@ -23,84 +22,91 @@ static void ensure_key_file(const char *key_path) {
 }
 
 void test_create_open_close_remove_shared_memory() {
+  const auto ops = ipc_system_v_ops();
   char key_path[128];
   make_key_path(key_path, sizeof(key_path), "shm");
   ensure_key_file(key_path);
-  shared_memory_remove(key_path);
+  ipc_memory_remove(ops, key_path);
 
-  SharedMemory created;
+  Ipc ipc;
+  ipc_initialize(&ipc, ops);
   bool created_flag = false;
-  TEST_ASSERT_TRUE(shared_memory_create(&created, key_path, TEST_DATA_CAPACITY,
-                                        &created_flag));
+  TEST_ASSERT_TRUE(
+      ipc_memory_create(&ipc, key_path, TEST_DATA_CAPACITY, &created_flag));
   TEST_ASSERT_TRUE(created_flag);
-  TEST_ASSERT_EQUAL_size_t(TEST_DATA_CAPACITY,
-                           shared_memory_data_capacity(&created));
-  TEST_ASSERT_FALSE(shared_memory_is_producer_finished(&created));
+  TEST_ASSERT_EQUAL_size_t(TEST_DATA_CAPACITY, ipc_memory_data_capacity(&ipc));
+  TEST_ASSERT_FALSE(ipc_memory_is_producer_finished(&ipc));
 
-  SharedMemory opened;
-  TEST_ASSERT_TRUE(shared_memory_open(&opened, key_path, 0));
-  TEST_ASSERT_EQUAL_size_t(TEST_DATA_CAPACITY,
-                           shared_memory_data_capacity(&opened));
+  Ipc peer;
+  ipc_initialize(&peer, ops);
+  TEST_ASSERT_TRUE(ipc_memory_open(&peer, key_path));
+  TEST_ASSERT_EQUAL_size_t(TEST_DATA_CAPACITY, ipc_memory_data_capacity(&peer));
 
-  shared_memory_set_producer_finished(&created);
-  TEST_ASSERT_TRUE(shared_memory_is_producer_finished(&opened));
+  ipc_memory_set_producer_finished(&ipc);
+  TEST_ASSERT_TRUE(ipc_memory_is_producer_finished(&peer));
 
-  memset(shared_memory_data(&created), 0xAB, TEST_DATA_CAPACITY);
-  const unsigned char *peer =
-      (const unsigned char *)shared_memory_data(&opened);
-  TEST_ASSERT_EQUAL_HEX8(0xAB, peer[TEST_DATA_CAPACITY - 1]);
+  memset(ipc_memory_data(&ipc), 0xAB, TEST_DATA_CAPACITY);
+  const unsigned char *peer_data =
+      (const unsigned char *)ipc_memory_data(&peer);
+  TEST_ASSERT_EQUAL_HEX8(0xAB, peer_data[TEST_DATA_CAPACITY - 1]);
 
-  shared_memory_close(&opened);
-  shared_memory_close(&created);
-  TEST_ASSERT_TRUE(shared_memory_remove(key_path));
-  TEST_ASSERT_FALSE(shared_memory_remove(key_path));
+  ipc_memory_close(&peer);
+  ipc_memory_close(&ipc);
+  TEST_ASSERT_TRUE(ipc_memory_remove(ops, key_path));
+  TEST_ASSERT_FALSE(ipc_memory_remove(ops, key_path));
   unlink(key_path);
 }
 
 void test_second_create_reports_existing_segment() {
+  const auto ops = ipc_system_v_ops();
   char key_path[128];
   make_key_path(key_path, sizeof(key_path), "shm2");
   ensure_key_file(key_path);
-  shared_memory_remove(key_path);
+  ipc_memory_remove(ops, key_path);
 
-  SharedMemory first;
+  Ipc first;
+  ipc_initialize(&first, ops);
   bool created_flag = false;
-  TEST_ASSERT_TRUE(shared_memory_create(&first, key_path, TEST_DATA_CAPACITY,
-                                        &created_flag));
+  TEST_ASSERT_TRUE(
+      ipc_memory_create(&first, key_path, TEST_DATA_CAPACITY, &created_flag));
   TEST_ASSERT_TRUE(created_flag);
 
-  SharedMemory second;
+  Ipc second;
+  ipc_initialize(&second, ops);
   bool second_flag = true;
-  TEST_ASSERT_TRUE(shared_memory_create(&second, key_path, TEST_DATA_CAPACITY,
-                                        &second_flag));
+  TEST_ASSERT_TRUE(
+      ipc_memory_create(&second, key_path, TEST_DATA_CAPACITY, &second_flag));
   TEST_ASSERT_FALSE(second_flag);
 
-  shared_memory_close(&second);
-  shared_memory_close(&first);
-  shared_memory_remove(key_path);
+  ipc_memory_close(&second);
+  ipc_memory_close(&first);
+  ipc_memory_remove(ops, key_path);
   unlink(key_path);
 }
 
 void test_semaphore_create_wait_post_remove() {
+  const auto ops = ipc_system_v_ops();
   char key_path[128];
   make_key_path(key_path, sizeof(key_path), "sem");
   ensure_key_file(key_path);
-  semaphore_remove(key_path, 'S');
+  ipc_semaphore_remove(ops, key_path);
 
-  Semaphore semaphore;
+  Ipc ipc;
+  ipc_initialize(&ipc, ops);
   bool created_flag = false;
-  TEST_ASSERT_TRUE(semaphore_create(&semaphore, key_path, 'S', &created_flag));
+  TEST_ASSERT_TRUE(ipc_semaphore_create(&ipc, key_path, &created_flag));
   TEST_ASSERT_TRUE(created_flag);
-  TEST_ASSERT_TRUE(semaphore_wait(&semaphore));
-  TEST_ASSERT_TRUE(semaphore_post(&semaphore));
+  TEST_ASSERT_TRUE(ipc_semaphore_wait(&ipc));
+  TEST_ASSERT_TRUE(ipc_semaphore_post(&ipc));
 
-  Semaphore peer;
-  TEST_ASSERT_TRUE(semaphore_open(&peer, key_path, 'S'));
-  TEST_ASSERT_TRUE(semaphore_wait(&peer));
-  TEST_ASSERT_TRUE(semaphore_post(&peer));
+  Ipc peer;
+  ipc_initialize(&peer, ops);
+  TEST_ASSERT_TRUE(ipc_semaphore_open(&peer, key_path));
+  TEST_ASSERT_TRUE(ipc_semaphore_wait(&peer));
+  TEST_ASSERT_TRUE(ipc_semaphore_post(&peer));
 
-  TEST_ASSERT_TRUE(semaphore_remove(key_path, 'S'));
-  TEST_ASSERT_FALSE(semaphore_remove(key_path, 'S'));
+  TEST_ASSERT_TRUE(ipc_semaphore_remove(ops, key_path));
+  TEST_ASSERT_FALSE(ipc_semaphore_remove(ops, key_path));
   unlink(key_path);
 }
 

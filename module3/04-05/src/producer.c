@@ -3,15 +3,12 @@
 #include "producer.h"
 
 #include "block_list.h"
-#include "semaphore.h"
-#include "shared_memory.h"
 #include "view.h"
 
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
 
-constexpr int SEMAPHORE_PROJECT_ID = 'S';
 constexpr uint32_t PRODUCER_BLOCK_MAX_VALUES = 64;
 
 static uint32_t random_block_size() {
@@ -24,39 +21,42 @@ static void fill_random_values(int32_t *values, uint32_t count) {
   }
 }
 
-bool producer_run(const char *key_path, const size_t data_capacity,
-                  const unsigned int produce_delay,
+bool producer_run(const IpcOps *ipc_ops, const char *base_name,
+                  const size_t data_capacity, const unsigned int produce_delay,
                   const unsigned int poll_delay) {
-  SharedMemory memory;
+  if (ipc_ops == nullptr || base_name == nullptr) {
+    return false;
+  }
+
+  Ipc ipc;
+  ipc_initialize(&ipc, ipc_ops);
+
   bool created = false;
 
-  if (!shared_memory_create(&memory, key_path, data_capacity, &created)) {
+  if (!ipc_memory_create(&ipc, base_name, data_capacity, &created)) {
     view_error("cannot create shared memory");
     return false;
   }
 
   if (!created) {
     view_shared_memory_exists();
-    shared_memory_close(&memory);
+    ipc_memory_close(&ipc);
     return false;
   }
 
-  Semaphore semaphore;
-
-  if (!semaphore_create(&semaphore, key_path, SEMAPHORE_PROJECT_ID, &created) ||
-      !created) {
+  if (!ipc_semaphore_create(&ipc, base_name, &created) || !created) {
     view_error("cannot create semaphore");
-    shared_memory_close(&memory);
-    shared_memory_remove(key_path);
+    ipc_memory_close(&ipc);
+    ipc_memory_remove(ipc_ops, base_name);
     return false;
   }
 
-  if (!block_list_initialize(shared_memory_data(&memory),
-                             shared_memory_data_capacity(&memory))) {
+  if (!block_list_initialize(ipc_memory_data(&ipc),
+                             ipc_memory_data_capacity(&ipc))) {
     view_error("cannot initialize block list");
-    semaphore_remove(key_path, SEMAPHORE_PROJECT_ID);
-    shared_memory_close(&memory);
-    shared_memory_remove(key_path);
+    ipc_semaphore_remove(ipc_ops, base_name);
+    ipc_memory_close(&ipc);
+    ipc_memory_remove(ipc_ops, base_name);
     return false;
   }
 
@@ -71,10 +71,10 @@ bool producer_run(const char *key_path, const size_t data_capacity,
     const uint32_t count = random_block_size();
     fill_random_values(values, count);
 
-    void *data = shared_memory_data(&memory);
-    const size_t capacity = shared_memory_data_capacity(&memory);
+    void *data = ipc_memory_data(&ipc);
+    const size_t capacity = ipc_memory_data_capacity(&ipc);
 
-    semaphore_wait(&semaphore);
+    ipc_semaphore_wait(&ipc);
 
     uint32_t offset = 0;
     const auto appended =
@@ -84,11 +84,11 @@ bool producer_run(const char *key_path, const size_t data_capacity,
     if (appended) {
       block_count += 1;
     } else if (block_list_all_processed(data, capacity)) {
-      shared_memory_set_producer_finished(&memory);
+      ipc_memory_set_producer_finished(&ipc);
       finished = true;
     }
 
-    semaphore_post(&semaphore);
+    ipc_semaphore_post(&ipc);
 
     if (finished) {
       break;
@@ -115,8 +115,9 @@ bool producer_run(const char *key_path, const size_t data_capacity,
 
   view_producer_finished(block_count);
 
-  semaphore_remove(key_path, SEMAPHORE_PROJECT_ID);
-  shared_memory_close(&memory);
-  shared_memory_remove(key_path);
+  ipc_semaphore_close(&ipc);
+  ipc_memory_close(&ipc);
+  ipc_semaphore_remove(ipc_ops, base_name);
+  ipc_memory_remove(ipc_ops, base_name);
   return true;
 }
