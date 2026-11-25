@@ -11,6 +11,7 @@ static bool open_owner_queues(MqChatQueues *queues) {
   queues->receive_queue =
       mq_open(queues->first_name, O_RDONLY | O_CREAT | O_EXCL | O_NONBLOCK,
               0600, nullptr);
+
   if (queues->receive_queue == (mqd_t)-1) {
     fprintf(stderr, "mq_open(%s): %s\n", queues->first_name, strerror(errno));
     return false;
@@ -19,6 +20,7 @@ static bool open_owner_queues(MqChatQueues *queues) {
   queues->send_queue =
       mq_open(queues->second_name, O_WRONLY | O_CREAT | O_EXCL | O_NONBLOCK,
               0600, nullptr);
+
   if (queues->send_queue == (mqd_t)-1) {
     fprintf(stderr, "mq_open(%s): %s\n", queues->second_name, strerror(errno));
     mq_close(queues->receive_queue);
@@ -38,6 +40,7 @@ static bool open_private_queue(MqChatQueues *queues, long pid) {
   queues->receive_queue =
       mq_open(queues->private_name, O_RDONLY | O_NONBLOCK | O_CREAT | O_EXCL,
               0600, nullptr);
+
   if (queues->receive_queue == (mqd_t)-1 && errno == EEXIST) {
     mq_unlink(queues->private_name);
     queues->receive_queue =
@@ -55,12 +58,14 @@ static bool open_private_queue(MqChatQueues *queues, long pid) {
 
 static bool open_peer_queues(MqChatQueues *queues, long pid) {
   queues->send_queue = mq_open(queues->first_name, O_WRONLY | O_NONBLOCK);
+
   if (queues->send_queue == (mqd_t)-1) {
     fprintf(stderr, "mq_open(%s): %s\n", queues->first_name, strerror(errno));
     return false;
   }
 
   queues->second_queue = mq_open(queues->second_name, O_RDONLY | O_NONBLOCK);
+
   if (queues->second_queue == (mqd_t)-1) {
     fprintf(stderr, "mq_open(%s): %s\n", queues->second_name, strerror(errno));
     mq_close(queues->send_queue);
@@ -84,6 +89,7 @@ bool mq_chat_queues_open(MqChatQueues *queues, const char *base_name) {
   queues->private_name[0] = '\0';
 
   const mqd_t probe = mq_open(queues->first_name, O_WRONLY | O_NONBLOCK);
+
   if (probe != (mqd_t)-1) {
     mq_close(probe);
     return open_peer_queues(queues, (long)getpid());

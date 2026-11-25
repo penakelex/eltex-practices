@@ -78,6 +78,7 @@ static bool owner_handle_frame(MqChatQueues *queues, PeerTable *table,
     }
 
     const mqd_t private_queue = mq_peer_queue_open(queues->base_name, pid);
+
     if (private_queue == (mqd_t)-1) {
       fprintf(stderr, "Cannot open reply queue for pid %ld\n", pid);
       return true;
@@ -86,6 +87,7 @@ static bool owner_handle_frame(MqChatQueues *queues, PeerTable *table,
     const int number = table->count + 1;
 
     char you[CHAT_MESSAGE_MAX];
+
     if (protocol_format_you(you, sizeof(you), pid, number)) {
       chat_send_text(private_queue, you, 0);
     }
@@ -121,6 +123,7 @@ static void owner_drain_queue(MqChatQueues *queues, PeerTable *table) {
     unsigned int priority = 0;
     const ssize_t size =
         mq_receive(queues->receive_queue, buffer, sizeof(buffer), &priority);
+
     if (size == -1) {
       if (errno != EAGAIN) {
         fprintf(stderr, "mq_receive: %s\n", strerror(errno));
@@ -169,6 +172,7 @@ bool chat_owner_run(MqChatQueues *queues) {
       buffer[strcspn(buffer, "\n")] = '\0';
 
       char message[CHAT_MESSAGE_MAX];
+
       if (protocol_format_msg_owner(message, sizeof(message), buffer)) {
         owner_broadcast(&table, message, 0);
       }
@@ -176,6 +180,7 @@ bool chat_owner_run(MqChatQueues *queues) {
   }
 
   char bye[CHAT_MESSAGE_MAX];
+
   if (protocol_format_bye_owner(bye, sizeof(bye))) {
     owner_broadcast(&table, bye, CHAT_QUIT_PRIORITY);
   }

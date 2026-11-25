@@ -7,7 +7,6 @@
 #include "view.h"
 
 #include <errno.h>
-#include <string.h>
 #include <unistd.h>
 
 static void subscriber_send_control(const int msqid, const pid_t pid,

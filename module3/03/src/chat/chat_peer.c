@@ -16,6 +16,7 @@ static constexpr int REGISTER_TIMEOUT_MS = 5000;
 static bool peer_register(MqChatQueues *queues, long pid, char *peer_name,
                           size_t peer_name_size, int *assigned_number) {
   char buffer[CHAT_MESSAGE_MAX];
+
   if (!protocol_format_hi(buffer, sizeof(buffer), pid)) {
     return false;
   }
@@ -25,6 +26,7 @@ static bool peer_register(MqChatQueues *queues, long pid, char *peer_name,
   }
 
   int waited_ms = 0;
+
   while (waited_ms < REGISTER_TIMEOUT_MS && signal_received == 0) {
     struct pollfd fd = {
         .fd = (int)queues->receive_queue, .events = POLLIN, .revents = 0};
@@ -48,6 +50,7 @@ static bool peer_register(MqChatQueues *queues, long pid, char *peer_name,
     unsigned int priority = 0;
     const ssize_t size =
         mq_receive(queues->receive_queue, buffer, sizeof(buffer), &priority);
+
     if (size == -1) {
       continue;
     }
@@ -105,6 +108,7 @@ static void peer_drain_queue(mqd_t queue, char *buffer, size_t buffer_size,
 bool chat_peer_run(MqChatQueues *queues, long pid) {
   char self_name[PROTOCOL_PEER_NAME_MAX];
   int assigned_number = 0;
+
   if (!peer_register(queues, pid, self_name, sizeof(self_name),
                      &assigned_number)) {
     return true;
@@ -153,6 +157,7 @@ bool chat_peer_run(MqChatQueues *queues, long pid) {
       buffer[strcspn(buffer, "\n")] = '\0';
 
       char message[CHAT_MESSAGE_MAX];
+
       if (protocol_format_msg_peer(message, sizeof(message), pid, buffer)) {
         chat_send_text(queues->send_queue, message, 0);
       }
@@ -160,6 +165,7 @@ bool chat_peer_run(MqChatQueues *queues, long pid) {
   }
 
   char bye[CHAT_MESSAGE_MAX];
+
   if (protocol_format_bye_peer(bye, sizeof(bye), pid)) {
     chat_send_text(queues->send_queue, bye, CHAT_QUIT_PRIORITY);
   }

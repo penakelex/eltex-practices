@@ -49,12 +49,14 @@ bool protocol_format_bye_owner(char *buffer, size_t size) {
 
 static bool parse_prefix_pid(char *buffer, const char *prefix, long *pid) {
   const size_t prefix_length = strlen(prefix);
+
   if (strncmp(buffer, prefix, prefix_length) != 0) {
     return false;
   }
 
   char *end = nullptr;
   const long value = strtol(buffer + prefix_length, &end, 10);
+
   if (end == buffer + prefix_length || *end != '\0') {
     return false;
   }

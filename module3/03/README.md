@@ -107,7 +107,7 @@ make run-03 ARGS="demo"
 # B: привет                    →  A печатает: peer1> привет
 # C: всем привет               →  A печатает: peer2> всем привет
 # A: добро пожаловать          →  B и C печатают: owner> добро пожаловать
-# B: Ctrl-D                    →  A печатает: peer1 left the chat
+# B: Ctrlmg-D                    →  A печатает: peer1 left the chat
 # A: Ctrl-C                    →  C печатает: Owner left the chat и выходит
 ```
 
