@@ -4,8 +4,8 @@ MODULES := module2 module3
 .PHONY: all clean test format format-check install-hooks run $(MODULES)
 .PHONY: run-calculator run-phonebook run-phonebook-static \
         run-permissions run-packet_router run-priority_queue
-.PHONY: run-01 run-02 run-03 run-04 run-05 run-06 run-07 run-08 \
-        run-cross-01 run-cross-02
+.PHONY: run-01 run-02 run-03 run-04 run-05 run-06 run-07 run-07-server \
+        run-08 run-cross-01 run-cross-02
 
 all: $(MODULES)
 
@@ -35,6 +35,6 @@ run-calculator run-phonebook run-permissions run-packet_router \
 run-priority_queue run-phonebook-static: module2
 	$(MAKE) -C module2 $@ ARGS="$(ARGS)"
 
-run-01 run-02 run-03 run-04 run-05 run-06 run-07 run-08 \
+run-01 run-02 run-03 run-04 run-05 run-06 run-07 run-07-server run-08 \
 run-cross-01 run-cross-02: module3
 	$(MAKE) -C module3 $@ ARGS="$(ARGS)"
