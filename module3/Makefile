@@ -1,7 +1,7 @@
 ROOT := $(abspath ..)
 
 LIBS := 04-05 06-07
-APPS := 01 02 03 04 05 06 07 08 cross-01
+APPS := 01 02 03 04 05 06 07 08 cross-01 cross-02
 BUILT := $(LIBS) $(APPS)
 
 include $(ROOT)/mk/module.mk
@@ -14,6 +14,9 @@ run-cross-01-server:
 
 run-cross-01-client:
 	$(MAKE) -C cross-01 run-client ARGS="$(ARGS)"
+
+run-cross-02:
+	$(MAKE) -C cross-02 run ARGS="$(ARGS)"
 
 run:
 	@echo "Укажите задание: make run-01 ARGS=\"...\""

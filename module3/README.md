@@ -21,7 +21,7 @@
 | `07/` | TCP-сокеты + мультиплексирование | готово |
 | `08/` | UDP raw сокеты (перехват UDP-сегментов) | готово |
 | `cross-01/` | raw сокеты + САОД + сигналы | готово |
-| `cross-02/` | fork + poll/epoll/select + таймеры + IPC | — |
+| `cross-02/` | fork + select + timerfd + pipe | готово |
 
 ## Сборка и запуск
 
@@ -61,6 +61,16 @@ sudo make run-08 ARGS="-f all"
 # Сервер и клиент запускать в двух терминалах
 make run-cross-01-server ARGS="-p 5000"
 make run-cross-01-client ARGS="-p 5000"
+
+# Кросс-задание 2 (управление такси: fork + select + timerfd + pipe)
+make run-cross-02
+# Далее команды вводятся в CLI приложения:
+#   create_driver        — породить driver, напечатает его pid
+#   send_task <pid> 5    — занять driver на 5 секунд
+#   send_task <pid> 5    — повторно: ответ "Busy <осталось>"
+#   get_status <pid>     — Available или Busy <осталось>
+#   get_drivers          — список всех drivers с статусами
+# Выход — Ctrl+D (EOF): CLI рассылает shutdown и ждёт завершения drivers
 
 # Собрать/протестировать только задание 1
 make -C 01
