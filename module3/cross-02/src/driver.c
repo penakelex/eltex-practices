@@ -48,12 +48,14 @@ int driver_run(const int command_fd, const int event_fd, const pid_t pid) {
   bool busy = false;
   int status = 0;
 
+  fd_set master_set;
+  FD_ZERO(&master_set);
+  FD_SET(command_fd, &master_set);
+  FD_SET(timer_fd, &master_set);
+  const int max_fd = command_fd > timer_fd ? command_fd : timer_fd;
+
   while (true) {
-    fd_set read_set;
-    FD_ZERO(&read_set);
-    FD_SET(command_fd, &read_set);
-    FD_SET(timer_fd, &read_set);
-    const int max_fd = command_fd > timer_fd ? command_fd : timer_fd;
+    fd_set read_set = master_set;
 
     if (select(max_fd + 1, &read_set, nullptr, nullptr, nullptr) < 0) {
       if (errno == EINTR) {

@@ -102,13 +102,21 @@ static void send_command(const DriverEntry *entry, const TaxiCommandType type,
   }
 }
 
-static void handle_create_driver(DriverTable *table) {
+static void handle_create_driver(DriverTable *table, fd_set *master_set,
+                                 int *max_fd) {
   if (!spawn_driver(table)) {
     taxi_view_driver_failed();
     return;
   }
 
-  taxi_view_driver_created(driver_table_at(table, table->count - 1)->pid);
+  const DriverEntry *entry = driver_table_at(table, table->count - 1);
+  FD_SET(entry->event_fd, master_set);
+
+  if (entry->event_fd > *max_fd) {
+    *max_fd = entry->event_fd;
+  }
+
+  taxi_view_driver_created(entry->pid);
 }
 
 static void handle_send_task(DriverTable *table, char *arguments) {
@@ -152,7 +160,8 @@ static void handle_get_status(DriverTable *table, char *arguments) {
   send_command(entry, TAXI_COMMAND_STATUS, 0);
 }
 
-static void handle_command(DriverTable *table, char *line) {
+static void handle_command(DriverTable *table, char *line, fd_set *master_set,
+                           int *max_fd) {
   char *name = strtok(line, " \t\r\n");
 
   if (name == nullptr) {
@@ -160,7 +169,7 @@ static void handle_command(DriverTable *table, char *line) {
   }
 
   if (strcmp(name, "create_driver") == 0) {
-    handle_create_driver(table);
+    handle_create_driver(table, master_set, max_fd);
   } else if (strcmp(name, "send_task") == 0) {
     handle_send_task(table, nullptr);
   } else if (strcmp(name, "get_status") == 0) {
@@ -230,20 +239,13 @@ bool taxi_controller_run() {
   char line[LINE_CAPACITY];
   bool running = true;
 
+  fd_set master_set;
+  FD_ZERO(&master_set);
+  FD_SET(STDIN_FILENO, &master_set);
+  int max_fd = STDIN_FILENO;
+
   while (running) {
-    fd_set read_set;
-    FD_ZERO(&read_set);
-    FD_SET(STDIN_FILENO, &read_set);
-    int max_fd = STDIN_FILENO;
-
-    for (size_t index = 0; index < driver_table_count(&table); index++) {
-      const int fd = driver_table_at(&table, index)->event_fd;
-      FD_SET(fd, &read_set);
-
-      if (fd > max_fd) {
-        max_fd = fd;
-      }
-    }
+    fd_set read_set = master_set;
 
     if (select(max_fd + 1, &read_set, nullptr, nullptr, nullptr) < 0) {
       if (errno == EINTR) {
@@ -260,6 +262,7 @@ bool taxi_controller_run() {
       if (FD_ISSET(entry->event_fd, &read_set)) {
         if (!handle_event(entry)) {
           const pid_t pid = entry->pid;
+          FD_CLR(entry->event_fd, &master_set);
           close_driver(entry);
           driver_table_remove_at(&table, index);
           taxi_view_driver_exited(pid);
@@ -274,7 +277,7 @@ bool taxi_controller_run() {
       if (fgets(line, sizeof(line), stdin) == nullptr) {
         running = false;
       } else {
-        handle_command(&table, line);
+        handle_command(&table, line, &master_set, &max_fd);
       }
     }
   }
